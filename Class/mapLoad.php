@@ -35,7 +35,7 @@
 
 	// 맵에 이미지 넣기
 	function imgUpload($file, $map_id, $loc_x, $loc_y) { // 필요하다면 post 변수를 인자로 전달받아 사용
-		$file_path = $_SERVER['DOCUMENT_ROOT']."/AndroTest/appimg/";
+		$file_path = $_SERVER['DOCUMENT_ROOT']."/Mapics/appimg/";
 		$file_path .= basename( $_FILES['uploaded_file']['name']);
 		
 		if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {

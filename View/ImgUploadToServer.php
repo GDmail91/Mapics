@@ -1,5 +1,5 @@
 <?
-    $file_path = "/var/www/html/AndroTest/appimg/";
+    $file_path = "/var/www/html/Mapics/appimg/";
     $file_path = $file_path . basename( $_FILES['uploaded_file']['name']);
     
     if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
@@ -17,7 +17,7 @@
 <body>
 <?php
 ini_set("display_errors", "1");
-$uploaddir = 'C:\Bitnami\wampstack-5.4.39-0\apache2\htdocs\AndroTest\appimg\\';
+$uploaddir = 'C:\Bitnami\wampstack-5.4.39-0\apache2\htdocs\Mapics\appimg\\';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 echo $uploadfile.'<pre>';
 if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
