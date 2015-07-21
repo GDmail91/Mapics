@@ -59,12 +59,9 @@
 
 
 ////////////////////// MODEL CALSS
+include '_MapicsDB.php';
 
-class ImgDB {
-	var $db_host = "128.199.102.18";   
-	var $db_id = "mapics_admin";  
-	var $db_password = "mapics2015";  
-	var $db_dbname = "post_at"; 
+class ImgDB extends _MapicsDB{
 
 	// 전체 사진 가져오기
 	function getImages($map_id) {
