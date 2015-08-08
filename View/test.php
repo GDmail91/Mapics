@@ -4,12 +4,11 @@
     <meta charset="utf-8"/>
 </head>   
 <body>
-<form enctype="multipart/form-data" action="../Controller/uploadtest.php" method="POST">
-   <input type="hidden" name="MAX_FILE_SIZE" value="3000000" />
-   <input type="hidden" name="map_id" value="5"/>
-   <input type="hidden" name="loc_x" value="7"/>
-   <input type="hidden" name="loc_y" value="7"/>
-   <input name="uploaded_file" type="file" />
+<form enctype="multipart/form-data" action="../Controller/test.php" method="POST">
+   <input type="hidden" name="dest_id" value="3" />
+   <input type="hidden" name="user_id" value="1"/>
+   <input type="hidden" name="nickname" value="my nick name"/>
+   <textarea name="comment" rows="4"></textarea>
    <input type="submit" value="upload" />
 </form>
 </body>

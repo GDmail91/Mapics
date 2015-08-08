@@ -2,6 +2,8 @@
 include 'Valid_check.php';
 include 'password.php';
 
+/////////////////////// CONTROLLER CLASS
+
 class Auth {
 	// 회원 등록하기
 	function register() {
@@ -53,10 +55,9 @@ class Auth {
 			$_SESSION['username'] = $user_data['name'];
 			$_SESSION['user_id'] = $user_data['user_id'];
 			$_SESSION['is_login'] = true;
-			echo '로그인 성공했습니다.';
-			var_dump($_SESSION);
+			echo "{ \"is_login\":\"TRUE\" }";
 		} else {
-			echo '아이디 또는 비밀번호가 맞지 않습니다.';
+			echo "{ \"is_login\":\"FALSE\" }";
 		}
 	}
 
@@ -117,6 +118,12 @@ class Mapics_user extends _MapicsDB {
 		$row = mysql_fetch_assoc($result);
 		
 		return $row;
+	}
+
+	function _session_log() {
+		session_id(); // 세션 id
+		session_name(); // 세션이름
+		session_get_cookie_params(); // 세션 데이터
 	}
 }
 ?>

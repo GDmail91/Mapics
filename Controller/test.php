@@ -1,10 +1,26 @@
 <?
-// CONTROLLER, MODEL 불러오기
-include '../Class/mapLoad.php';
+/*// CONTROLLER, MODEL 불러오기
+include '../Class/Auth.php';
 
-// 지도 불러오기
-$map = new MapLoad;
-$result = $map->getMap('5');
+// 회원가입
+$auth = new Auth;
+$auth->login();
 
-echo $result;
+$_SESSION['test'] = '테스트';
+$_SESSION['test2'] = '테스트2';
+$_SESSION['test3'] = '테스트3';
+var_dump($_SESSION);
+session_start('tesT!!!');
+//session_destroy($name);
+
+echo $_COOKIE['PHPSESSID'];
+
+echo "<br>";
+if ($_COOKIE['PHPSESSID'] === session_id()) {
+	echo TRUE;
+}*/
+include '../Class/img_ctl.php';
+
+$img_ctl = new img_ctl;
+$img_ctl->anti_sqlinjection();
 ?>

@@ -18,6 +18,8 @@
 			$map .= "\"img_".$img['img_id']."\":[";
 			$map .= "\"loc_x\":\"".$img['loc_x']."\", \"loc_y\":\"".$img['loc_y']."\"";
 			$map .= ", \"img_url\":\"".$img['img_url']."\"";
+			$map .= ", \"description\":\"".$img['description']."\"";
+			$map .= ", \"liker\":\"".$img['liker']."\"";
 			$map .= "]";
 
 			if (!empty($img))
@@ -28,13 +30,19 @@
 	}
 
 	// 맵 이미지 불러오기
-	function getMapImg() {
-		$mapImg;
+	function getMapImg($map_id) {
+		// db 연결
+		$db = new ImgDB;
+		// db에서 map_url 가져옴 (user_id, map_url, full_map)
+		$map_result = $db->getMap($map_id);
+
+		$mapImg = $map_result['full_map'];
+
 		return $mapImg;
 	}
 
 	// 맵에 이미지 넣기
-	function imgUpload($file, $map_id, $loc_x, $loc_y) { // 필요하다면 post 변수를 인자로 전달받아 사용
+	function imgUpload($file, $map_id, $loc_x, $loc_y, $description) { // 필요하다면 post 변수를 인자로 전달받아 사용
 		$file_path = $_SERVER['DOCUMENT_ROOT']."/Mapics/appimg/";
 		$file_path .= basename( $_FILES['uploaded_file']['name']);
 		
@@ -44,13 +52,14 @@
 			echo "<File upload fail>";
 		}
 
-		// db 연결 사진들 가져옴
+		// 사진들 가져와 db에 넣음
 		$db = new ImgDB;
 		$result = $db->setImage(
 			$_FILES['uploaded_file']['name'], 
 			$_POST['map_id'], 
 			$_POST['loc_x'], 
-			$_POST['loc_y']
+			$_POST['loc_y'],
+			$_POST['description']
 			);
 
 		echo $result;
@@ -75,7 +84,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT img_id, map_id, loc_x, loc_y, img_url FROM image_storage WHERE map_id =".$map_id;
+		$sql = "SELECT img_id, map_id, loc_x, loc_y, img_url, description, liker FROM image_storage WHERE map_id =".$map_id;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 
@@ -86,7 +95,9 @@ class ImgDB extends _MapicsDB{
 				"img_id" => (int) $row ['img_id'] ,  
 				"loc_x" => (int) $row ['loc_x'] ,  
 				"loc_y" => (int) $row ['loc_y'],
-				"img_url" => $row ['img_url']
+				"img_url" => $row ['img_url'],
+				"description" => $row['description'],
+				"liker" => (int) $row ['liker']
 			);
 			// $resultArray에 담기
 			array_push($resultArray, $arrayMiddle);  
@@ -122,7 +133,7 @@ class ImgDB extends _MapicsDB{
 	}
 
 	// 사진 올리기 
-	function setImage($img_url, $map_id, $loc_x, $loc_y) {
+	function setImage($img_url, $map_id, $loc_x, $loc_y, $description) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -133,7 +144,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "INSERT INTO image_storage (map_id, loc_x, loc_y, img_url) VALUES ('".$map_id."', '".$loc_x."', '".$loc_y."', '".$img_url."')";
+		$sql = "INSERT INTO image_storage (map_id, loc_x, loc_y, img_url, description) VALUES ('".$map_id."', '".$loc_x."', '".$loc_y."', '".$img_url.", '".$description."')";
 		// 쿼리 실행
 		if($result = mysql_query($sql, $connect)) {
 			echo "<DB insert success>";
