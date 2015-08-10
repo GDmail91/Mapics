@@ -30,7 +30,33 @@ class Img_ctl extends _MapicsDB{
 		return $row['liker'];
 	}
 
-	// 사진 댓글 작성 (category : 0)
+	// 지도 좋아요 클릭 
+	function Map_like($img_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "UPDATE image_storage SET liker = liker+1 WHERE img_id = ".$img_id;
+
+		// 좋아요 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		
+		// 업데이트 된 값 전달
+		$sql2 = "SELECT liker FROM image_storage WHERE img_id=".$img_id;
+		$result = mysql_query($sql2, $connect);
+		// 쿼리 실행 결과
+		$row = mysql_fetch_assoc($result);
+		
+		return $row['liker'];
+	}
+
+	// 사진 댓글 가져오기 (category : 0)
 	function getComments($dest_id, $category=0){
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
@@ -63,7 +89,9 @@ class Img_ctl extends _MapicsDB{
 
 		return $resultArray;
 	}
-	function addComment($dest_id, $user_id, $nickname, $comment) {
+
+	// 사진 댓글 작성 (category : 0)
+	function addComment($category, $dest_id, $user_id, $nickname, $comment) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -74,7 +102,7 @@ class Img_ctl extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$strQuery = "INSERT INTO comments (dest_id, user_id, comment, nickname) VALUES ('".$dest_id."', '".$user_id."', '".$comment."', '".$nickname."')";
+		$sql = "INSERT INTO comments (category, dest_id, user_id, comment, nickname) VALUES ('".$category."', '".$dest_id."', '".$user_id."', '".$comment."', '".$nickname."')";
 	
 		if($result = mysql_query($sql, $connect)) {
 			echo "DB insert success";

@@ -19,8 +19,8 @@ echo "<br>";
 if ($_COOKIE['PHPSESSID'] === session_id()) {
 	echo TRUE;
 }*/
-include '../Class/img_ctl.php';
+include '../Class/Hash_tag.php';
 
-$img_ctl = new img_ctl;
-$img_ctl->anti_sqlinjection();
+$hash_tag = new Hash_tag;
+echo $hash_tag->get_tag();
 ?>

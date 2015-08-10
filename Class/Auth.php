@@ -6,15 +6,15 @@ include 'password.php';
 
 class Auth {
 	// 회원 등록하기
-	function register() {
+	function register($name, $password, $re_password, $phone, $email) {
 		// 유효성 검증
 		$Valid = new valid_check; 
 		$arr = array( 
-			'name'=>array('이름',$_POST['name']), 
-			'password'=>array('비밀번호',$_POST['password']), 
-			're_password'=>array('비밀번호 확인',$_POST['re_password']), 
-			'phone'=>array('전화번호',$_POST['phone']), 
-			'email'=>array('이메일',$_POST['email'],'detail') // detail에 추가 요소 넣을수 있음
+			'name'=>array('이름',$name), 
+			'password'=>array('비밀번호',$password]), 
+			're_password'=>array('비밀번호 확인',$re_password), 
+			'phone'=>array('전화번호',$phone), 
+			'email'=>array('이메일',$email,'detail') // detail에 추가 요소 넣을수 있음
 			); 
 
 		if($Valid->Server_Check($arr) === false){
@@ -23,17 +23,17 @@ class Auth {
 		} else {
 			echo '유효성 검증 성공';
 			// 비밀번호 보안
-			$hash = password_hash($_POST['password'], PASSWORD_BCRYPT);
+			$hash = password_hash($password, PASSWORD_BCRYPT);
 			
 			// 데이터베이스 업로드
 			$userDB = new Mapics_user;
 			// SQL Injection 공격 방지
 			$userDB->anti_sqlinjection();
 			$result = $userDB->adduser(array(
-				'name'=>$_POST['name'],
-				'email'=>$_POST['email'],
+				'name'=>$name,
+				'email'=>$email,
 				'password'=>$hash,
-				'phone'=>$_POST['phone']
+				'phone'=>$phone
 			));
 
 			if ($result) {
@@ -44,14 +44,14 @@ class Auth {
 		}
 	}
 
-	function login() {
+	function login($email, $password) {
 		session_start();
 		$userDB = new Mapics_user;
 		$user_data = $userDB->login(array(
-				'email'=>$_POST['email']
+				'email'=>$email
 			));
 
-		if ($user_data['email'] === $_POST['email'] && password_verify($_POST['password'], $user_data['password'])) {
+		if ($user_data['email'] === $email && password_verify($password, $user_data['password'])) {
 			$_SESSION['username'] = $user_data['name'];
 			$_SESSION['user_id'] = $user_data['user_id'];
 			$_SESSION['is_login'] = true;
