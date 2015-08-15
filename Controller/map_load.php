@@ -1,7 +1,13 @@
 <?
 	include '../Class/mapLoad.php';
 
-	$maps = new mapLoad;
+	$mapLoad = new mapLoad;
 
-	$maps->getMap($_POST['map_id']);
+	$maps = $mapLoad->getMapAllCapture();
+
+	for ($i=0; $i < count($maps); $i++) { 
+		$mapArray['mapInfo'.$i] = $maps[$i];
+	}
+	echo(urldecode( json_encode ( $mapArray ))) ;
+
 ?>

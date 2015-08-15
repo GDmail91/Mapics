@@ -29,16 +29,26 @@
 		return $map;
 	}
 
-	// 맵 이미지 불러오기
-	function getMapImg($map_id) {
+	// 맵 캡쳐 불러오기
+	function getMapCapture($map_id) {
 		// db 연결
 		$db = new ImgDB;
 		// db에서 map_url 가져옴 (user_id, map_url, full_map)
 		$map_result = $db->getMap($map_id);
 
-		$mapImg = $map_result['full_map'];
+		return $map_result;
+		//$mapImg = $map_result['mapCapture'];
 
-		return $mapImg;
+		//return $mapImg;
+	}
+
+	function getMapAllCapture($num = 10) {
+		// db 연결
+		$db = new ImgDB;
+		// db에서 map_url 가져옴 (map_url, full_map)
+		$map_result = $db->getMapAll($num);
+
+		return $map_result;
 	}
 
 	// 맵에 이미지 넣기
@@ -64,6 +74,28 @@
 
 		echo $result;
 	}
+
+	// 캡처된 맵  넣기
+	function mapUpload($file, $map_id) { // 필요하다면 post 변수를 인자로 전달받아 사용
+		$file_path = $_SERVER['DOCUMENT_ROOT']."/Mapics/Static/map_capture";
+		$file_path .= basename( $_FILES['uploaded_file']['name']);
+		
+		if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
+			echo "<File upload success>";
+		} else{
+			echo "<File upload fail>";
+		}
+
+		// 사진들 가져와 db에 넣음
+		$db = new ImgDB;
+		$result = $db->setImage(
+			$_FILES['uploaded_file']['name'], 
+			$_POST['map_id']
+			);
+
+		echo $result;
+	}
+
 }
 
 
@@ -125,10 +157,40 @@ class ImgDB extends _MapicsDB{
 		
 		// $resultArray에 담기
 		$resultArray = array (  
+			"map_id" => (int) $row ['map_id'] ,
 			"user_id" => (int) $row ['user_id'] ,  
 			"map_url" => $row ['map_url'] ,  
-			"full_map" => $row ['full_map']
+			"mapCapture" => $row ['full_map']
 		);
+		return $resultArray;
+	}
+
+	function getMapAll($num) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT map_id, full_map FROM map_storage LIMIT 5"  ;
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		
+		// 쿼리 실행 결과를 배열 형태로 담음
+		$resultArray = array ();  
+		while ( $row = mysql_fetch_assoc($result)) {  
+			$arrayMiddle = array (  
+				"map_id" => (int) $row ['map_id'] ,
+				"mapCapture" => $row ['full_map']
+			);
+			// $resultArray에 담기
+			array_push($resultArray, $arrayMiddle);  
+		}
+
 		return $resultArray;
 	}
 
@@ -145,6 +207,29 @@ class ImgDB extends _MapicsDB{
 
 		// 쿼리문 생성
 		$sql = "INSERT INTO image_storage (map_id, loc_x, loc_y, img_url, description) VALUES ('".$map_id."', '".$loc_x."', '".$loc_y."', '".$img_url.", '".$description."')";
+		// 쿼리 실행
+		if($result = mysql_query($sql, $connect)) {
+			echo "<DB insert success>";
+		} else {
+			echo "<DB insert fail>";
+		}
+
+		return $result;
+	}
+
+	// 맵 캡처 올리기 
+	function setMapCapture($full_map, $map_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "UPDATE 'map_storage' SET 'map_id' = '".$map_id."', 'full_map' = '".$full_map."')";
 		// 쿼리 실행
 		if($result = mysql_query($sql, $connect)) {
 			echo "<DB insert success>";
