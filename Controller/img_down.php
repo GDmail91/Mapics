@@ -5,7 +5,7 @@
 
 
 	for ($i=0; $i < 10; $i++) { 
-		$mapArray['mapInfo'.$i] = $maps->getMapCapture(2);
+		$mapArray['mapInfo'.$i] = $maps->getMap(2);
 			
 		// $resultArray에 담기
 		//array_push($mapArray, $tempArray);  

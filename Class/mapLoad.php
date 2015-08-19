@@ -9,23 +9,12 @@
 		// db에서 map_url 가져옴 (user_id, map_url, full_map)
 		$map_result = $db->getMap($map_id);
 		// db에서 사진들 가져옴
-		$images = $db->getImages($map_id);
+		$img = $db->getImages($map_id);
 
-		$map = "{";
-		$map .= "\"map_url\":\"".$map_result['map_url']."\",\"results\":[";
-		// 이미지 관련 변수들 JSON 형태로 출력
-		foreach ($images as $img) {
-			$map .= "\"img_".$img['img_id']."\":[";
-			$map .= "\"loc_x\":\"".$img['loc_x']."\", \"loc_y\":\"".$img['loc_y']."\"";
-			$map .= ", \"img_url\":\"".$img['img_url']."\"";
-			$map .= ", \"description\":\"".$img['description']."\"";
-			$map .= ", \"liker\":\"".$img['liker']."\"";
-			$map .= "]";
-
-			if (!empty($img))
-				$map .=",";
-		}
-		$map .= "]}";
+		$map = array(
+			'map_url'=>$map_result['map_url'],  // 지도 배경
+			'results'=>$img
+			);
 		return $map;
 	}
 
@@ -42,13 +31,24 @@
 		//return $mapImg;
 	}
 
-	function getMapAllCapture($num = 10) {
+	// 맵 캡쳐 전체($num 개수만큼) 불러오기
+	function getMapAllCapture($num = 5) {
 		// db 연결
 		$db = new ImgDB;
-		// db에서 map_url 가져옴 (map_url, full_map)
+		// db에서 map_url 가져옴 (map_url, full_map, description, liker)
 		$map_result = $db->getMapAll($num);
 
 		return $map_result;
+	}
+
+	// 사진 한장에 대한 정보 불러오기
+	function getImage($img_id) {
+		// db 연결
+		$db = new ImgDB;
+		// db에서 사진에 대한 정보 가져옴
+		$img = $db->getEachImage($img_id);
+
+		return $img;
 	}
 
 	// 맵에 이미지 넣기
@@ -138,6 +138,36 @@ class ImgDB extends _MapicsDB{
 		return $resultArray;
 	}
 
+	// 사진 하나 가져오기
+	function getEachImage($img_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT loc_x, loc_y, img_url, description, liker FROM image_storage WHERE img_id =".$img_id;
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+
+		// 쿼리 실행 결과
+		$row = mysql_fetch_assoc($result);
+		
+		// $resultArray에 담기
+		$resultArray = array (  
+			"loc_x" => (int) $row ['loc_x'] ,  
+			"loc_y" => (int) $row ['loc_y'],
+			"img_url" => $row ['img_url'],
+			"description" => $row['description'],
+			"liker" => (int) $row ['liker']
+		);
+		return $resultArray;
+	}
+
 	function getMap($map_id) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
@@ -157,7 +187,7 @@ class ImgDB extends _MapicsDB{
 		
 		// $resultArray에 담기
 		$resultArray = array (  
-			"map_id" => (int) $row ['map_id'] ,
+			"map_id" => $map_id,
 			"user_id" => (int) $row ['user_id'] ,  
 			"map_url" => $row ['map_url'] ,  
 			"mapCapture" => $row ['full_map']
@@ -176,7 +206,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT map_id, full_map FROM map_storage LIMIT 5"  ;
+		$sql = "SELECT map_id, full_map, description, liker FROM map_storage LIMIT ".$num  ;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 		
@@ -185,13 +215,19 @@ class ImgDB extends _MapicsDB{
 		while ( $row = mysql_fetch_assoc($result)) {  
 			$arrayMiddle = array (  
 				"map_id" => (int) $row ['map_id'] ,
-				"mapCapture" => $row ['full_map']
+				"mapCapture" => $row ['full_map'],
+				"description" => $row ['description'],
+				"liker" => $row ['liker']
 			);
 			// $resultArray에 담기
 			array_push($resultArray, $arrayMiddle);  
 		}
 
 		return $resultArray;
+	}
+
+	function getMapCount() {
+
 	}
 
 	// 사진 올리기 

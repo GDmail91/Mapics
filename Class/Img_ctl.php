@@ -1,7 +1,7 @@
 <?
 
 ////////////////////// MODEL CALSS
-include '_MapicsDB.php';
+//include '_MapicsDB.php';
 
 class Img_ctl extends _MapicsDB{
 	// 사진 좋아요 클릭 
@@ -57,7 +57,7 @@ class Img_ctl extends _MapicsDB{
 	}
 
 	// 사진 댓글 가져오기 (category : 0)
-	function getComments($dest_id, $category=0){
+	function getComments($dest_id, $category=0){ // 사진 id, 카테고리
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
