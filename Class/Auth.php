@@ -80,15 +80,28 @@ class Auth {
 		$user_ident = $db->get_user_info($user_id);
 		$user_following = $db->get_user_following($user_id);
 		$user_follower = $db->get_user_follower($user_id);
+		$user_photo = array('user_photo'=>null);
 
-		return $user_ident + $user_following + $user_follower;
+		return $user_ident + $user_photo + $user_following + $user_follower;
 	}
 
 	function set_follow($user_id, $dest_id) {
 		// DB 접속
 		$db = new Mapics_user;
 		// 사용자 정보 가져옴
+		$db->anti_sqlinjection();
 		$db_result = $db->set_follow($user_id, $dest_id);
+
+		$follow_result = "{\"result\":\"".$db_result."\"}";
+		return $follow_result;
+	}
+
+	function set_disfollow($user_id, $dest_id) {
+		// DB 접속
+		$db = new Mapics_user;
+		// 사용자 정보 가져옴
+		$db->anti_sqlinjection();
+		$db_result = $db->set_disfollow($user_id, $dest_id);
 
 		$follow_result = "{\"result\":\"".$db_result."\"}";
 		return $follow_result;
@@ -258,6 +271,44 @@ class Mapics_user extends _MapicsDB {
 		} else {
 			echo "<DB insert fail>";
 		}
+
+		return $result;
+	}
+
+	function set_follow($user_id, $dest_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "INSERT INTO follow (follower, following) VALUES ('".$user_id."', '".$dest_id."')";
+		
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+
+		return $result;
+	}
+
+	function set_disfollow($user_id, $dest_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "DELETE FROM follow WHERE follower=".$user_id." AND following=".$dest_id;
+		
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
 
 		return $result;
 	}
