@@ -43,8 +43,9 @@ class Auth {
 				$msg = '회원가입 실패';
 			}
 		}
-
-		$result = $db_result + $msg;
+		$result = "{\"result\":\"".$db_result."\",
+				\"msg\":\"".$msg."\"}";
+		return $result;
 	}
 
 	function login($email, $password) {

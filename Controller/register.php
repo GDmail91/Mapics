@@ -6,5 +6,5 @@ include '../Class/Auth.php';
 $auth = new Auth;
 $result = $auth->register($_POST['nickname'], $_POST['password'], $_POST['re_password'], $_POST['phone'], $_POST['email']);
 
-echo urldecode( json_encode ( $result )) ;
+echo $result ;
 ?>
