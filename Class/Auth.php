@@ -11,7 +11,7 @@ class Auth {
 		$Valid = new valid_check; 
 		$arr = array( 
 			'name'=>array('이름',$name), 
-			'password'=>array('비밀번호',$password]), 
+			'password'=>array('비밀번호',$password), 
 			're_password'=>array('비밀번호 확인',$re_password), 
 			'phone'=>array('전화번호',$phone), 
 			'email'=>array('이메일',$email,'detail') // detail에 추가 요소 넣을수 있음
@@ -71,10 +71,63 @@ class Auth {
 		$_SESSION = array();
 		echo '로그아웃 되었습니다.';
 	}
+
+	// 사용자 정보 가져옴
+	function user_info($user_id) {
+		// DB 접속
+		$db = new Mapics_user;
+		// 사용자 정보 가져옴
+		$user_ident = $db->get_user_info($user_id);
+		$user_following = $db->get_user_following($user_id);
+		$user_follower = $db->get_user_follower($user_id);
+
+		return $user_ident + $user_following + $user_follower;
+	}
+
+	function set_follow($user_id, $dest_id) {
+		// DB 접속
+		$db = new Mapics_user;
+		// 사용자 정보 가져옴
+		$db_result = $db->set_follow($user_id, $dest_id);
+
+		$follow_result = "{\"result\":\"".$db_result."\"}";
+		return $follow_result;
+	}
+
+	function edit_user($user_id, $career, $email, $phone, $user_photo) {
+		// 유효성 검증
+		$Valid = new valid_check; 
+		$arr = array( 
+			'career'=>array('직업',$profile), 
+			'phone'=>array('전화번호',$phone), 
+			'email'=>array('이메일',$email,'detail') // detail에 추가 요소 넣을수 있음
+			); 
+
+		if($Valid->Server_Check($arr) === false){
+			// 유효성 검증 실패
+			echo '유효성 검증 실패';
+		} else {
+			echo '유효성 검증 성공';
+			// 비밀번호 보안
+			$hash = password_hash($password, PASSWORD_BCRYPT);
+			
+			// 데이터베이스 업로드
+			$userDB = new Mapics_user;
+			// SQL Injection 공격 방지
+			$userDB->anti_sqlinjection();
+			$result = $userDB->set_user(array(
+				'career'=>$career,
+				'email'=>$email,
+				'phone'=>$phone
+			));
+		}
+
+		return $result;
+	}
 }
 
 ////////////////////// MODEL CALSS
-include '_MapicsDB.php';
+include_once '_MapicsDB.php';
 
 class Mapics_user extends _MapicsDB {
 	function adduser($user_info) {
@@ -124,6 +177,89 @@ class Mapics_user extends _MapicsDB {
 		session_id(); // 세션 id
 		session_name(); // 세션이름
 		session_get_cookie_params(); // 세션 데이터
+	}
+
+	function get_user_info($user_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT name, email, phone, nickname, career FROM mapics_user WHERE user_id =".$user_id;
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		// 쿼리 실행 결과
+		$row = mysql_fetch_assoc($result);
+		
+		return $row;
+	}
+
+	function get_user_following($user_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT COUNT(following) AS following FROM follow WHERE follower =".$user_id;
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		// 쿼리 실행 결과
+		$row = mysql_fetch_assoc($result);
+		
+		return $row;
+	}
+
+	function get_user_follower($user_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT COUNT(follower) AS follower FROM follow WHERE following =".$user_id;
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		// 쿼리 실행 결과
+		$row = mysql_fetch_assoc($result);
+		
+		return $row;
+	}
+
+	function set_user($user_info) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "UPDATE mapics_user SET career = ".$user_info['career'].", email = ".$user_info['email']." , phone = ".$user_info['phone']." WHERE user_id = ".$user_info['user_id'];
+		
+		// 쿼리 실행
+		if($result = mysql_query($sql, $connect)) {
+			echo "<DB insert success>";
+		} else {
+			echo "<DB insert fail>";
+		}
+
+		return $result;
 	}
 }
 ?>

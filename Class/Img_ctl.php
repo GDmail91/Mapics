@@ -1,7 +1,7 @@
 <?
 
 ////////////////////// MODEL CALSS
-//include '_MapicsDB.php';
+include_once '_MapicsDB.php';
 
 class Img_ctl extends _MapicsDB{
 	// 사진 좋아요 클릭 

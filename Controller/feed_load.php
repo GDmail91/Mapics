@@ -4,9 +4,9 @@
 	$mapLoad = new mapLoad;
 
 	if ($_POST['num'])
-		$maps = $mapLoad->getMapCaptureById($_POST['user_id'], $_POST['num']);
+		$maps = $mapLoad->getMapAllCapture($_POST['num']);
 	else	
-		$maps = $mapLoad->getMapCaptureById($_POST['user_id']);
+		$maps = $mapLoad->getMapAllCapture();
 
 	for ($i=0; $i < count($maps); $i++) { 
 		$mapArray['mapInfo'.$i] = $maps[$i];

@@ -36,7 +36,7 @@
 
 
 ////////////////////// MODEL CALSS
-include '_MapicsDB.php';
+include_once '_MapicsDB.php';
 
 class TagDB extends _MapicsDB{
 	function set_tag($tag_name, $map_id) {
