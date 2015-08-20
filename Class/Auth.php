@@ -35,7 +35,7 @@ class Auth {
 			if($db_email != null) {
 				$msg = '이메일이 이미 있습니다.';
 				$result = array(
-					'result'=>false,
+					'result'=>'false',
 					'msg'=>$msg
 					);
 				return $result;
@@ -57,7 +57,7 @@ class Auth {
 		}
 
 		$result = array(
-			'result'=>$db_result,
+			'result'=>parse_str($db_result),
 			'msg'=>$msg
 			);
 		return $result;
@@ -74,9 +74,9 @@ class Auth {
 			$_SESSION['username'] = $user_data['nickname'];
 			$_SESSION['user_id'] = $user_data['user_id'];
 			$_SESSION['is_login'] = true;
-			$result = "{ \"result\":\"TRUE\" }";
+			$result = array('result'=>'true');
 		} else {
-			$result = "{ \"result\":\"FALSE\" }";
+			$result = array('result'=>'false');
 		}
 
 		return $result;
