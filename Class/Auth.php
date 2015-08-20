@@ -26,10 +26,22 @@ class Auth {
 			// 비밀번호 보안
 			$hash = password_hash($password, PASSWORD_BCRYPT);
 			
-			// 데이터베이스 업로드
+			// 데이터베이스 로드
 			$userDB = new Mapics_user;
+
 			// SQL Injection 공격 방지
 			$userDB->anti_sqlinjection();
+			$db_email = $userDB->get_user_by_email($email);
+			if($db_email != null) {
+				$msg = '이메일이 이미 있습니다.';
+				$result = array(
+					'result'=>false,
+					'msg'=>$msg
+					);
+				return $result;
+			}
+			echo $db_email;
+
 			$db_result = $userDB->adduser(array(
 				'nickname'=>$nickname,
 				'email'=>$email,
@@ -43,8 +55,11 @@ class Auth {
 				$msg = '회원가입 실패';
 			}
 		}
-		$result = "{\"result\":\"".$db_result."\",
-				\"msg\":\"".$msg."\"}";
+
+		$result = array(
+			'result'=>$db_result,
+			'msg'=>$msg
+			);
 		return $result;
 	}
 
@@ -150,11 +165,7 @@ class Mapics_user extends _MapicsDB {
 		$sql = "INSERT INTO mapics_user (nickname, email, password, phone) VALUES ('".$user_info['nickname']."', '".$user_info['email']."', '".$user_info['password']."', '".$user_info['phone']."')";
 		
 		// 쿼리 실행
-		if($result = mysql_query($sql, $connect)) {
-			echo "<DB insert success>";
-		} else {
-			echo "<DB insert fail>";
-		}
+		$result = mysql_query($sql, $connect);
 
 		return $result;
 	}
@@ -183,6 +194,26 @@ class Mapics_user extends _MapicsDB {
 		session_id(); // 세션 id
 		session_name(); // 세션이름
 		session_get_cookie_params(); // 세션 데이터
+	}
+
+	function get_user_by_email($email) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT email FROM mapics_user WHERE email ='".$email."'";
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		// 쿼리 실행 결과
+		$row = mysql_fetch_assoc($result);
+		
+		return $row;
 	}
 
 	function get_user_info($user_id) {
