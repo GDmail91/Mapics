@@ -6,11 +6,12 @@ include 'password.php';
 
 class Auth {
 	// 회원 등록하기
-	function register($name, $password, $re_password, $phone, $email) {
+	function register($nickname, $password, $re_password, $phone, $email) {
+		$msg = ""; // 오류 메세지 출력 변수
 		// 유효성 검증
 		$Valid = new valid_check; 
 		$arr = array( 
-			'name'=>array('이름',$name), 
+			'name'=>array('이름',$nickname), 
 			'password'=>array('비밀번호',$password), 
 			're_password'=>array('비밀번호 확인',$re_password), 
 			'phone'=>array('전화번호',$phone), 
@@ -19,9 +20,9 @@ class Auth {
 
 		if($Valid->Server_Check($arr) === false){
 			// 유효성 검증 실패
-			echo '유효성 검증 실패';
+			$msg = '유효성 검증 실패';
 		} else {
-			echo '유효성 검증 성공';
+			$msh = '유효성 검증 성공';
 			// 비밀번호 보안
 			$hash = password_hash($password, PASSWORD_BCRYPT);
 			
@@ -29,19 +30,21 @@ class Auth {
 			$userDB = new Mapics_user;
 			// SQL Injection 공격 방지
 			$userDB->anti_sqlinjection();
-			$result = $userDB->adduser(array(
-				'name'=>$name,
+			$db_result = $userDB->adduser(array(
+				'nickname'=>$nickname,
 				'email'=>$email,
 				'password'=>$hash,
 				'phone'=>$phone
 			));
 
-			if ($result) {
-				echo '회원가입에 성공했습니다.';
+			if ($db_result) {
+				$msg = '회원가입에 성공했습니다.';
 			} else {
-				echo '회원가입 실패';
+				$msg = '회원가입 실패';
 			}
 		}
+
+		$result = $db_result + $msg;
 	}
 
 	function login($email, $password) {
@@ -52,13 +55,15 @@ class Auth {
 			));
 
 		if ($user_data['email'] === $email && password_verify($password, $user_data['password'])) {
-			$_SESSION['username'] = $user_data['name'];
+			$_SESSION['username'] = $user_data['nickname'];
 			$_SESSION['user_id'] = $user_data['user_id'];
 			$_SESSION['is_login'] = true;
-			echo "{ \"is_login\":\"TRUE\" }";
+			$result = "{ \"result\":\"TRUE\" }";
 		} else {
-			echo "{ \"is_login\":\"FALSE\" }";
+			$result = "{ \"result\":\"FALSE\" }";
 		}
+
+		return $result;
 	}
 
 	function logout() {
@@ -107,35 +112,22 @@ class Auth {
 		return $follow_result;
 	}
 
-	function edit_user($user_id, $career, $email, $phone, $user_photo) {
-		// 유효성 검증
-		$Valid = new valid_check; 
-		$arr = array( 
-			'career'=>array('직업',$profile), 
-			'phone'=>array('전화번호',$phone), 
-			'email'=>array('이메일',$email,'detail') // detail에 추가 요소 넣을수 있음
-			); 
+	function edit_user($user_id, $nickname, $career, $email, $phone, $user_photo) {
+		// 데이터베이스 업로드
+		$userDB = new Mapics_user;
+		// SQL Injection 공격 방지
+		$userDB->anti_sqlinjection();
+		$db_result = $userDB->set_user($user_id, array(
+			'nickname'=>$nickname,
+			'career'=>$career,
+			'email'=>$email,
+			'phone'=>$phone));
+		if ($db_result ===true)
+			$edit_result = "{\"result\"=\"true\"}";
+		else 
+			$edit_result = "{\"result\"=\"false\"}";
 
-		if($Valid->Server_Check($arr) === false){
-			// 유효성 검증 실패
-			echo '유효성 검증 실패';
-		} else {
-			echo '유효성 검증 성공';
-			// 비밀번호 보안
-			$hash = password_hash($password, PASSWORD_BCRYPT);
-			
-			// 데이터베이스 업로드
-			$userDB = new Mapics_user;
-			// SQL Injection 공격 방지
-			$userDB->anti_sqlinjection();
-			$result = $userDB->set_user(array(
-				'career'=>$career,
-				'email'=>$email,
-				'phone'=>$phone
-			));
-		}
-
-		return $result;
+		return $edit_result;
 	}
 }
 
@@ -154,7 +146,7 @@ class Mapics_user extends _MapicsDB {
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "INSERT INTO mapics_user (name, email, password, phone) VALUES ('".$user_info['name']."', '".$user_info['email']."', '".$user_info['password']."', '".$user_info['phone']."')";
+		$sql = "INSERT INTO mapics_user (nickname, email, password, phone) VALUES ('".$user_info['nickname']."', '".$user_info['email']."', '".$user_info['password']."', '".$user_info['phone']."')";
 		
 		// 쿼리 실행
 		if($result = mysql_query($sql, $connect)) {
@@ -177,7 +169,7 @@ class Mapics_user extends _MapicsDB {
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT user_id, name, email, password, phone FROM mapics_user WHERE email ='".$user_info['email']."'";
+		$sql = "SELECT user_id, nickname, email, password, phone FROM mapics_user WHERE email ='".$user_info['email']."'";
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 		// 쿼리 실행 결과
@@ -252,7 +244,7 @@ class Mapics_user extends _MapicsDB {
 		return $row;
 	}
 
-	function set_user($user_info) {
+	function set_user($user_id, $user_info) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -263,14 +255,20 @@ class Mapics_user extends _MapicsDB {
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "UPDATE mapics_user SET career = ".$user_info['career'].", email = ".$user_info['email']." , phone = ".$user_info['phone']." WHERE user_id = ".$user_info['user_id'];
-		
-		// 쿼리 실행
-		if($result = mysql_query($sql, $connect)) {
-			echo "<DB insert success>";
-		} else {
-			echo "<DB insert fail>";
+		$sql = "UPDATE mapics_user SET ";
+		foreach ($user_info as $pop => $pop_val) {
+			each($user_info);
+			if ($pop_val != null) {
+				$sql .= $pop."= '".$pop_val."'";				
+				if (current($user_info))
+					$sql .= ", ";		
+			}
 		}
+		$sql .= " WHERE user_id = ".$user_id;
+		
+		echo $sql;
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
 
 		return $result;
 	}

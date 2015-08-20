@@ -4,6 +4,7 @@ include '../Class/Auth.php';
 
 // 회원가입
 $auth = new Auth;
-$auth->register($_POST['name'], $_POST['password'], $_POST['re_password'], $_POST['phone'], $_POST['email']);
+$result = $auth->register($_POST['nickname'], $_POST['password'], $_POST['re_password'], $_POST['phone'], $_POST['email']);
 
+echo urldecode( json_encode ( $result )) ;
 ?>
