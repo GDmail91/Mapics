@@ -57,7 +57,7 @@ class Auth {
 		}
 
 		$result = array(
-			'result'=>parse_str($db_result),
+			'result'=>($db_result) ? 'true' : 'false',
 			'msg'=>$msg
 			);
 		return $result;
