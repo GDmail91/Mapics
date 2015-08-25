@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
 </head>   
 <body>
-<form action="../Controller/map_search.php" method="POST">
+<form action="../Controller/map_load.php" method="POST">
    <input type="hidden" name="user_id" value="2" />
    <input type="hidden" name="map_name" value="하하" />
    <input type="hidden" name="map_locate" value="Jeju"/>

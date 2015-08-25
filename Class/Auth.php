@@ -117,15 +117,33 @@ class Auth {
 		return $follow_result;
 	}
 
-	function set_disfollow($user_id, $dest_id) {
+	function set_unfollow($user_id, $dest_id) {
 		// DB 접속
 		$db = new Mapics_user;
 		// 사용자 정보 가져옴
 		$db->anti_sqlinjection();
-		$db_result = $db->set_disfollow($user_id, $dest_id);
+		$db_result = $db->set_unfollow($user_id, $dest_id);
 
 		$follow_result = "{\"result\":\"".$db_result."\"}";
 		return $follow_result;
+	}
+
+	function get_follow($user_id) {
+		// DB 접속
+		$db = new Mapics_user;
+		// 사용자 정보 가져옴
+		$db_result = $db->get_follow($user_id);
+
+		return $db_result;
+	}
+
+	function is_follow($user_id) {
+		// DB 접속
+		$db = new Mapics_user;
+		// 사용자 정보 가져옴
+		$db_result = $db->is_follow($user_id);
+
+		return $db_result;
 	}
 
 	function edit_user($user_id, $nickname, $career, $email, $phone, $user_photo) {
@@ -324,7 +342,7 @@ class Mapics_user extends _MapicsDB {
 		return $result;
 	}
 
-	function set_disfollow($user_id, $dest_id) {
+	function set_unfollow($user_id, $dest_id) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -337,6 +355,49 @@ class Mapics_user extends _MapicsDB {
 		// 쿼리문 생성
 		$sql = "DELETE FROM follow WHERE follower=".$user_id." AND following=".$dest_id;
 		
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+
+		return $result;
+	}
+
+	function get_follow($user_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT following FROM follow WHERE follower ='".$user_id."'";
+
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		// 쿼리 실행 결과를 배열 형태로 담음
+		$resultArray = array ();
+		while ( $row = mysql_fetch_assoc($result)) {  
+			// $resultArray에 담기
+			array_push($resultArray, $row['following']);  
+		}
+		return $resultArray;
+	}
+
+	function is_follow($user_id, $dest_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT following FROM follow WHERE follower ='".$user_id."' AND following ='".$dest_id."'";
+
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 
