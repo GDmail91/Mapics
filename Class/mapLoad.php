@@ -54,7 +54,7 @@
 	function getMapCaptureById($user_id, $num = 5) {
 		// db 연결
 		$db = new ImgDB;
-		echo $user_id ;
+		
 		// db에서 map_url 가져옴 (map_url, full_map, description, liker)
 		$map_result = $db->getMapById($user_id, $num);
 
@@ -273,10 +273,10 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT map_id, full_map, description, liker FROM map_storage LIMIT ".$num." WHERE user_id = ".$user_id ;
+		$sql = "SELECT map_id, full_map, description, liker FROM map_storage WHERE user_id = ".$user_id." LIMIT ".$num ;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
-		var_dump($result);
+		
 		// 쿼리 실행 결과를 배열 형태로 담음
 		$resultArray = array ();  
 		while ( $row = mysql_fetch_assoc($result)) {  
