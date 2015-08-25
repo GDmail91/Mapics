@@ -25,7 +25,7 @@
 			'user_photo'=>$user_info['user_photo'],
 			'map_id'=>$map_id, 
 			'map_name'=>$map_info['map_name'],
-			'mapCapture'=>$map_info['mapCapture'],
+			'map_capture'=>$map_info['map_capture'],
 			'description'=>$map_info['description'],
 			'liker'=>$map_info['liker'],
 			'tag_name'=>$tag_name
