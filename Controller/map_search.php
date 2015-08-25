@@ -23,12 +23,11 @@
 			'user_id'=>$map_info['user_id'],
 			'nickname'=>$user_info['nickname'],
 			'user_photo'=>$user_info['user_photo'],
-			'map_info'=>array(
-				'map_id'=>$map_id, 
-				'map_name'=>$map_info['map_name'],
-				'mapCapture'=>$map_info['mapCapture'],
-				'description'=>$map_info['description'],
-				'liker'=>$map_info['liker'] ),
+			'map_id'=>$map_id, 
+			'map_name'=>$map_info['map_name'],
+			'mapCapture'=>$map_info['mapCapture'],
+			'description'=>$map_info['description'],
+			'liker'=>$map_info['liker'],
 			'tag_name'=>$tag_name
 			));
 	}
