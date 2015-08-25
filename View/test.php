@@ -4,8 +4,8 @@
     <meta charset="utf-8"/>
 </head>   
 <body>
-<form action="../Controller/follow_list.php" method="POST">
-   <input type="hidden" name="user_id" value="1" />
+<form action="../Controller/map_load.php" method="POST">
+   <input type="hidden" name="user_id" value="2" />
    <input type="hidden" name="map_name" value="하하" />
    <input type="hidden" name="map_locate" value="Jeju"/>
    <input type="hidden" name="map_id" value="5"/>
