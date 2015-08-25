@@ -37,7 +37,8 @@
 		// tag_name 저장
 		$db_result = $db->get_map_by_tag($tag_name);
 
-		return $db_result;
+		$result = array('map_id'=>$db_result);
+		return $result;
  	}
 }
 
