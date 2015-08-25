@@ -9,7 +9,7 @@
    <input type="hidden" name="map_name" value="하하" />
    <input type="hidden" name="map_locate" value="Jeju"/>
    <input type="hidden" name="map_type" value="1"/>
-   <input type="hidden" name="tag_name" value="DESIGNER"/>
+   <input type="hidden" name="tag_name" value="DESIGNER TESTER WHATEREREAR NEXT"/>
    <textarea name="dfadf" rows="4"></textarea>
    <input type="submit" value="upload" />
 </form>
