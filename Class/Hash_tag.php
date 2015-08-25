@@ -37,8 +37,25 @@
 		// tag_name 저장
 		$db_result = $db->get_map_by_tag($tag_name);
 
-		$result = array('map_id'=>$db_result);
-		return $result;
+		return $db_result;
+ 	}
+
+ 	function get_tag_id_by_map($map_id) {
+ 		// db 연결
+		$db = new TagDB;
+		// tag_name 저장
+		$db_result = $db->get_tag_id($map_id);
+
+		return $db_result;
+ 	}
+
+ 	function get_tag_name($tag_id) {
+ 		// db 연결
+		$db = new TagDB;
+		// tag_name 저장
+		$db_result = $db->get_tag_name($tag_id);
+
+		return $db_result;
  	}
 }
 
@@ -93,7 +110,7 @@ class TagDB extends _MapicsDB{
 		return $result;
 	}
 
-	function get_tag($map_id) {
+	function get_tag_id($map_id) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -104,22 +121,39 @@ class TagDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT tag_name FROM hash_tag WHERE map_id=".$map_id;
+		$sql = "SELECT tag_id FROM map_link_hash WHERE map_id=".$map_id;
 		
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
-
+		
 		// 쿼리 실행 결과를 배열 형태로 담음
 		$resultArray = array ();  
 		while ( $row = mysql_fetch_assoc($result)) {  
-			$arrayMiddle = array (  
-				"tag_name" => $row ['tag_name']
-			);
 			// $resultArray에 담기
-			array_push($resultArray, $arrayMiddle);  
+			array_push($resultArray, $row['tag_id']);  
 		}
-
 		return $resultArray;
+	}
+
+	function get_tag_name($tag_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT tag_name FROM hash_tag WHERE tag_id=".$tag_id;
+		
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		
+		$row = mysql_fetch_assoc($result);
+
+		return $row['tag_name'];
 	}
 
 	function get_tag_by_name($tag_name) {

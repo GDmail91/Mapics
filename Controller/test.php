@@ -22,9 +22,10 @@ if ($_COOKIE['PHPSESSID'] === session_id()) {
 include '../Class/Hash_tag.php';
 
 $hash_tag = new Hash_tag;
-$array[10] = {1,2,3,4,5,6,7,8,9};
-$test = array('map_id'=>$array);
+$tag = $hash_tag->get_tag_id_by_map($_POST['map_id']);
+foreach ($tag as $tag_id) {
+	echo $tag_name = $hash_tag->get_tag_name($tag_id)." ";
+}
 
-
-echo urldecode( json_encode ( $array )) ;
+//echo urldecode( json_encode ( $array )) ;
 ?>

@@ -20,8 +20,9 @@
 		$tag = explode(" ", trim($_POST['tag_name']));
 		foreach ($tag as $tag_name) {
 			$hash_result = $hash_tag->set_tag($tag_name, $reg_result['map_id']);	
+			if (!$hash_result) 
+				break;
 		}
-
 	} else {
 		$hash_result = false;
 	}
