@@ -17,9 +17,8 @@
 		// POST 로 온 map_id 에 해당하는 태그들 DB에 넣음
 		// 해시태그 갯수만큼 불러와야함 (추후에 배열로 받는걸로 바꿔야함)
 		$hash_tag = new Hash_tag;
-		$tag = explode(" ", $_POST['tag_name']);
+		$tag = explode(" ", trim($_POST['tag_name']));
 		foreach ($tag as $tag_name) {
-			echo $tag_name;
 			$hash_result = $hash_tag->set_tag($tag_name, $reg_result['map_id']);	
 		}
 
