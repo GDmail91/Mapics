@@ -17,7 +17,7 @@
 		$user_info = $userLoad->user_info($map_info['user_id']);	// 유저정보
 		$tag = $hash_tag->get_tag_id_by_map($map_id);	// 태그 정보
 		foreach ($tag as $tag_id) {
-			$tag_name .= $hash_tag->get_tag_name($tag_id)." ";	// 태그 네임 저장
+			$tag_name .= "#".$hash_tag->get_tag_name($tag_id)." ";	// 태그 네임 저장
 		}
 		array_push($mapArray, array(
 			'user_id'=>$map_info['user_id'],
@@ -30,9 +30,10 @@
 			'liker'=>$map_info['liker'],
 			'tag_name'=>$tag_name
 			));
+		$tag_name = "";
 	}
 	//var_dump($mapArray);
 	
-	echo urldecode( json_encode ( $mapArray ));
+	var_dump( $mapArray );
 
 ?>
