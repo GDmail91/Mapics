@@ -8,6 +8,7 @@
 	$follow_list = array();
 	foreach ($follow_result as $user_id) {
 		$user_info = $Auth->user_info($user_id);
+		var_dump($user_info);
 		// 나중에 세션 데이터를 사용 user_id를 $_SSESION['user_id'] 를 사용한다.
 		//$is_follow = $Auth->is_follow($my_id, $user_id);
 		

@@ -101,9 +101,8 @@ class Auth {
 		$user_ident = $db->get_user_info($user_id);
 		$user_following = $db->get_user_following($user_id);
 		$user_follower = $db->get_user_follower($user_id);
-		$user_photo = array('user_photo'=>null);
 
-		return $user_ident + $user_photo + $user_following + $user_follower;
+		return $user_ident + $user_following + $user_follower;
 	}
 
 	function set_follow($user_id, $dest_id) {
@@ -199,7 +198,7 @@ class Mapics_user extends _MapicsDB {
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT user_id, nickname, email, password, phone FROM mapics_user WHERE email ='".$user_info['email']."'";
+		$sql = "SELECT user_id, nickname, email, password, phone, user_photo FROM mapics_user WHERE email ='".$user_info['email']."'";
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 		// 쿼리 실행 결과
@@ -245,7 +244,7 @@ class Mapics_user extends _MapicsDB {
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT name, email, phone, nickname, career FROM mapics_user WHERE user_id =".$user_id;
+		$sql = "SELECT name, email, phone, nickname, career, user_photo FROM mapics_user WHERE user_id =".$user_id;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 		// 쿼리 실행 결과
