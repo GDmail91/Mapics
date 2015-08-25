@@ -34,6 +34,6 @@
 	}
 	//var_dump($mapArray);
 	
-	var_dump( $mapArray );
+	echo urldecode( json_encode ( $mapArray ));
 
 ?>
