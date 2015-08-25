@@ -4,33 +4,35 @@
  class Hash_tag {
  	// 태그 설정하기
  	function set_tag($tag_name, $map_id) { 
- 		// db 연결
+ 		$has_tag_id = $this->get_tag_id($tag_name);
+		// db 연결
 		$TagDB = new TagDB;
 		// tag_name 저장
-		//$TagDB->anti_sqlinjection();
-		$TagDB->set_tag($tag_name, $map_id);
+		$TagDB->anti_sqlinjection();
+
+ 		// 태그네임이 이미 있는경우
+ 		if ($has_tag_id != null) {
+			$db_result = $TagDB->link_tag($has_tag_id, $map_id);
+			$result = array('result'=>$db_result);
+		} else {
+			$db_result = $TagDB->set_tag($tag_name, $map_id);
+			$result = array('result'=>$db_result);
+		}
+
+		return $result;
  	}
 
- 	function get_tag($map_id) {
+ 	function get_tag_id($tag_name) {
  		// db 연결
 		$db = new TagDB;
 		// tag_name 저장
-		$db_result = $db->get_tag($map_id);
-		
+		$db_result = $db->get_tag_by_name($tag_name);
+	//	var_dump($db_result);
+		return $db_result;
+ 	}
 
-		// 불러온 태그 이름들을 JSON 형태로 저장
-		$count = 1;
-		$tag_result = "{";
-		while (!empty($db_result)) {
-			$tag = array_pop($db_result);
-			$tag_result .= "\"".$count++."\" : \"".$tag['tag_name']."\"";
+ 	function get_tag($tag_id) {
 
-			if (!empty($db_result))
-				$tag_result .=", ";
-		}
-		$tag_result .= "}";
-
-		return $tag_result;
  	}
 }
 
@@ -50,15 +52,38 @@ class TagDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "INSERT INTO hash_tag (tag_name, map_id) VALUES ('".$tag_name."', '".$map_id."')";
-		
+		$sql = "INSERT INTO hash_tag (tag_name) VALUES ('".$tag_name."')";
 		// 쿼리 실행
-		if($result = mysql_query($sql, $connect)) {
-			echo "DB insert success>";
-		} else {
-			echo "DB insert fail>";
-		}
+		$result = mysql_query($sql, $connect);
 
+		$get_tag_id = $this->get_tag_by_name($tag_name);	
+
+		$sql2 = "INSERT INTO map_link_hash (map_id, tag_id) VALUES ('".$map_id."', '".$get_tag_id."')";
+		// 쿼리 실행
+		$result2 = mysql_query($sql2, $connect);
+		
+
+		if ($result && $result2) 
+			return true;
+		else
+			return false;
+	}
+
+	function link_tag($tag_id, $map_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "INSERT INTO map_link_hash (map_id, tag_id) VALUES ('".$map_id."', '".$tag_id."')";
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		
 		return $result;
 	}
 
@@ -89,6 +114,28 @@ class TagDB extends _MapicsDB{
 		}
 
 		return $resultArray;
+	}
+
+	function get_tag_by_name($tag_name) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT tag_id FROM hash_tag WHERE tag_name='".$tag_name."'";
+		
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+
+		// 쿼리 실행 결과
+		$row = mysql_fetch_assoc($result);
+		
+		return $row['tag_id'];
 	}
 }
 

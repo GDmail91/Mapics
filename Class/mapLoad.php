@@ -61,14 +61,14 @@
 		return $img;
 	}
 
-	// 맵 가져오기
+	// 맵 업로드
 	function upload_Map($map_info) {
 		// db 연결
 		$db = new ImgDB;
 		// db에서 map_url 가져옴 (user_id, map_url, full_map)
-		//$db->anti_sqlinjection();
-		$db_result = $db->regMap($map_info);
-		$map_result = "{\"result\":\"".$db_result."\"}";
+		$db->anti_sqlinjection();
+		$map_result = $db->regMap($map_info);
+		
 		return $map_result;
 	}
 
@@ -343,18 +343,18 @@ class ImgDB extends _MapicsDB{
 		// 세션 시작
 		session_start();
 
+		$cur_map_sql = "SELECT map_id FROM map_storage ORDER BY map_id DESC LIMIT 1";
+		$cur_map_result = mysql_query($cur_map_sql, $connect);
+		$cur_map_id = mysql_fetch_assoc($cur_map_result);
+		$cur_map_id['map_id'] += 1;
+
 		// 쿼리문 생성
-		$sql = "INSERT INTO map_storage (user_id, map_name, map_locate, map_type, full_map ) VALUES ('".$map_info['user_id']."', '".$map_info['map_name']."', '".$map_info['map_locate']."', '".$map_info['map_type']."', 'Static/map_capture/testurl.jpg')";
+		$sql = "INSERT INTO map_storage (map_id, user_id, map_name, map_locate, map_type, full_map ) VALUES ('".$cur_map_id['map_id']."', '".$map_info['user_id']."', '".$map_info['map_name']."', '".$map_info['map_locate']."', '".$map_info['map_type']."', 'Static/map_capture/testurl.jpg')";
 		// 쿼리 실행
 
-		$result = mysql_query($sql, $connect);
-		
-		/*if($result = mysql_query($sql, $connect)) {
-			echo "<DB insert success>";
-		} else {
-			echo "<DB insert fail>";
-		}*/
+		$db_result = mysql_query($sql, $connect);
 
+		$result = array('db_result'=>$db_result, 'map_id'=>$cur_map_id['map_id']);
 		return $result;
 	}
 }

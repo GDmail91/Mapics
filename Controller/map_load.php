@@ -11,6 +11,6 @@
 	for ($i=0; $i < count($maps); $i++) { 
 		$mapArray['mapInfo'.$i] = $maps[$i];
 	}
-	echo(urldecode( json_encode ( $mapArray ))) ;
+	echo urldecode( json_encode ( $mapArray ));
 
 ?>
