@@ -241,7 +241,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT map_id, full_map, description, liker FROM map_storage LIMIT ".$num  ;
+		$sql = "SELECT map_id, user_id, full_map, description, liker FROM map_storage LIMIT ".$num  ;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 		
@@ -250,6 +250,7 @@ class ImgDB extends _MapicsDB{
 		while ( $row = mysql_fetch_assoc($result)) {  
 			$arrayMiddle = array (  
 				"map_id" => (int) $row ['map_id'] ,
+				"user_id" => (int) $row ['user_id'],
 				"map_capture" => $row ['full_map'],
 				"description" => $row ['description'],
 				"liker" => $row ['liker']
@@ -273,7 +274,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT map_id, full_map, description, liker FROM map_storage WHERE user_id = ".$user_id." LIMIT ".$num ;
+		$sql = "SELECT map_id, user_id, full_map, description, liker FROM map_storage WHERE user_id = ".$user_id." LIMIT ".$num ;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 		
@@ -282,6 +283,7 @@ class ImgDB extends _MapicsDB{
 		while ( $row = mysql_fetch_assoc($result)) {  
 			$arrayMiddle = array (  
 				"map_id" => (int) $row ['map_id'] ,
+				"user_id" => (int) $row ['user_id'],
 				"map_capture" => $row ['full_map'],
 				"description" => $row ['description'],
 				"liker" => $row ['liker']
