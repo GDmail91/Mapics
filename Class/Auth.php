@@ -74,7 +74,11 @@ class Auth {
 			$_SESSION['username'] = $user_data['nickname'];
 			$_SESSION['user_id'] = $user_data['user_id'];
 			$_SESSION['is_login'] = true;
-			$result = array('result'=>'true');
+			$result = array(
+				'result'=>'true',
+				'nickname'=>$user_data['nickname'],
+				'user_id'=>$user_data['user_id']
+				);
 		} else {
 			$result = array('result'=>'false');
 		}
