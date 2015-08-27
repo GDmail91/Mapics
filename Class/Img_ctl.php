@@ -31,7 +31,7 @@ class Img_ctl extends _MapicsDB{
 	}
 
 	// 지도 좋아요 클릭 
-	function Map_like($img_id) {
+	function Map_like($map_id) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -42,13 +42,13 @@ class Img_ctl extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "UPDATE image_storage SET liker = liker+1 WHERE img_id = ".$img_id;
+		$sql = "UPDATE map_storage SET liker = liker+1 WHERE map_id = ".$map_id;
 
 		// 좋아요 쿼리 실행
 		$result = mysql_query($sql, $connect);
 		
 		// 업데이트 된 값 전달
-		$sql2 = "SELECT liker FROM image_storage WHERE img_id=".$img_id;
+		$sql2 = "SELECT liker FROM map_storage WHERE map_id=".$map_id;
 		$result = mysql_query($sql2, $connect);
 		// 쿼리 실행 결과
 		$row = mysql_fetch_assoc($result);

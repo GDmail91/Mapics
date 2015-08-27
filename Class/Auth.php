@@ -118,7 +118,10 @@ class Auth {
 		$db->anti_sqlinjection();
 		$db_result = $db->set_follow($user_id, $dest_id);
 
-		$follow_result = "{\"result\":\"".$db_result."\"}";
+		if ($db_result)
+			$follow_result = "{\"result\":\"true\"}";
+		else 
+			$follow_result = "{\"result\":\"false\"}";
 		return $follow_result;
 	}
 
