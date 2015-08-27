@@ -119,9 +119,9 @@ class Auth {
 		$db_result = $db->set_follow($user_id, $dest_id);
 
 		if ($db_result)
-			$follow_result = "{\"result\":\"true\"}";
+			$follow_result = array('result'=>'true');
 		else 
-			$follow_result = "{\"result\":\"false\"}";
+			$follow_result = array('result'=>'false');
 		return $follow_result;
 	}
 
@@ -132,7 +132,11 @@ class Auth {
 		$db->anti_sqlinjection();
 		$db_result = $db->set_unfollow($user_id, $dest_id);
 
-		$follow_result = "{\"result\":\"".$db_result."\"}";
+		if ($db_result)
+			$follow_result = array('result'=>'true');
+		else 
+			$follow_result = array('result'=>'false');
+		
 		return $follow_result;
 	}
 
