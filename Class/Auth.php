@@ -71,7 +71,7 @@ class Auth {
 			));
 
 		if ($user_data['email'] === $email && password_verify($password, $user_data['password'])) {
-			$_SESSION['username'] = $user_data['nickname'];
+			$_SESSION['nickname'] = $user_data['nickname'];
 			$_SESSION['user_id'] = $user_data['user_id'];
 			$_SESSION['is_login'] = true;
 			$result = array(

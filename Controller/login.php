@@ -6,5 +6,8 @@ include '../Class/Auth.php';
 $auth = new Auth;
 $result = $auth->login($_POST['email'], $_POST['password']);
 
+
+//echo $_SESSION['nickname']." ".$_SESSION['user_id']." ".$_SESSION['is_login'];
+
 echo urldecode( json_encode ( $result )) ;
 ?>

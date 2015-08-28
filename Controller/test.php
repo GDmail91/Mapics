@@ -19,13 +19,15 @@ echo "<br>";
 if ($_COOKIE['PHPSESSID'] === session_id()) {
 	echo TRUE;
 }*/
-include '../Class/Hash_tag.php';
+session_start();
+//echo $_SESSION['nickname']." ".$_SESSION['user_id']." ".$_SESSION['is_login'];
 
-$hash_tag = new Hash_tag;
-$tag = $hash_tag->get_tag_id_by_map($_POST['map_id']);
-foreach ($tag as $tag_id) {
-	echo $tag_name = $hash_tag->get_tag_name($tag_id)." ";
-}
+$array = array(
+	'nickname'=>$_SESSION['nickname'],
+	'user_id'=>$_SESSION['user_id'],
+	'is_login'=>$_SESSION['is_login']
+	);
+echo urldecode( json_encode ( $array )) ;
 
 //echo urldecode( json_encode ( $array )) ;
 ?>
