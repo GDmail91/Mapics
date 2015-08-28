@@ -12,6 +12,6 @@
 		$_POST['user_photo']
 		);
 
-	echo $result ;
+	echo urldecode( json_encode ( $result )) ;
 
 ?>

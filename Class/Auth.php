@@ -106,15 +106,10 @@ class Auth {
 		$user_following = $db->get_user_following($user_id);
 		$user_follower = $db->get_user_follower($user_id);
 
-		if ($user_following['following'] == null) $user_following['following'] = '0';
-		if ($user_follower['follower'] == null) $user_follower['follower'] = '0';
-		//var_dump( $user_following['following']);
 		array_push($user_ident, array(
 			'follower'=>$user_follower['follower'], 
-			'following'=>$uesr_following['following']
+			'following'=>$user_following['following']
 			));
-
-		var_dump($user_ident);
 
 		return $user_ident;
 	}
