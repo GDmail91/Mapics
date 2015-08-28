@@ -106,7 +106,13 @@ class Auth {
 		$user_following = $db->get_user_following($user_id);
 		$user_follower = $db->get_user_follower($user_id);
 
-		array_push($user_ident, array('follower'=>$user_follower['follower'], 'following'=>$uesr_following['following']));
+		if ($user_follwing['following'] == null) $user_follwing['following'] = '0';
+		if ($user_follwer['follower'] == null) $user_follwer['follower'] = '0';
+		echo $user_following['following'];
+		array_push($user_ident, array(
+			'follower'=>$user_follower['follower'], 
+			'following'=>$uesr_following['following']
+			));
 		//$result = $user_ident;
 		return $user_ident;
 	}
@@ -168,7 +174,7 @@ class Auth {
 			'career'=>$career,
 			'email'=>$email,
 			'phone'=>$phone));
-		if ($db_result ===true)
+		if ($db_result === true)
 			$edit_result = "{\"result\"=\"true\"}";
 		else 
 			$edit_result = "{\"result\"=\"false\"}";
@@ -294,6 +300,7 @@ class Mapics_user extends _MapicsDB {
 		$result = mysql_query($sql, $connect);
 		// 쿼리 실행 결과
 		$row = mysql_fetch_assoc($result);
+		var_dump($row);
 		
 		return $row;
 	}
@@ -340,7 +347,6 @@ class Mapics_user extends _MapicsDB {
 		}
 		$sql .= " WHERE user_id = ".$user_id;
 		
-		echo $sql;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 
