@@ -21,11 +21,13 @@ if ($_COOKIE['PHPSESSID'] === session_id()) {
 }*/
 session_start();
 //echo $_SESSION['nickname']." ".$_SESSION['user_id']." ".$_SESSION['is_login'];
-
+//$sessid = $_GET['sessid'];
+//var_dump( $_COOKIE['PHPSESSID']);
 $array = array(
 	'nickname'=>$_SESSION['nickname'],
 	'user_id'=>$_SESSION['user_id'],
-	'is_login'=>$_SESSION['is_login']
+	'is_login'=>$_SESSION['is_login'],
+	'phpsessid'=>$_COOKIE['PHPSESSID']
 	);
 echo urldecode( json_encode ( $array )) ;
 

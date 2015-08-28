@@ -206,6 +206,19 @@ class Img_ctl extends _MapicsDB{
 
 		return $result;
 	}
+
+	// 사진 업로드
+	function img_upload($file_path){
+		$file_path = $file_path . basename( $_FILES['uploaded_file']['name']);
+
+		if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
+			$result = array('result'=>'true');
+		} else {
+			$result = array('result'=>'false');
+		}
+
+		return $result;
+	}
 }
 
 ?>
