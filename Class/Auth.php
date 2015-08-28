@@ -113,7 +113,9 @@ class Auth {
 			'follower'=>$user_follower['follower'], 
 			'following'=>$uesr_following['following']
 			));
-		//$result = $user_ident;
+
+		var_dump($user_ident);
+
 		return $user_ident;
 	}
 
@@ -174,11 +176,11 @@ class Auth {
 			'career'=>$career,
 			'email'=>$email,
 			'phone'=>$phone));
-		if ($db_result === true)
-			$edit_result = "{\"result\"=\"true\"}";
+		if ($db_result)
+			$edit_result = array('result'=>'true');
 		else 
-			$edit_result = "{\"result\"=\"false\"}";
-
+			$edit_result = array('result'=>'false');
+		
 		return $edit_result;
 	}
 }
@@ -315,7 +317,7 @@ class Mapics_user extends _MapicsDB {
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT COUNT(follower) AS follower FROM follow WHERE following =".$user_id;
+		$sql = "SELECT COUNT(follower) AS follower FROM follow WHERE following =	".$user_id;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 		// 쿼리 실행 결과
