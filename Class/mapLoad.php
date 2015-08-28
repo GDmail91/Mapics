@@ -18,6 +18,7 @@
 		return $map;
 	}
 
+	// 맵 하나 정보 가져오기
 	function get_map_info($map_id) {
 		// db 연결
 		$db = new ImgDB;
@@ -363,7 +364,7 @@ class ImgDB extends _MapicsDB{
 		$cur_map_id['map_id'] += 1;
 
 		// 쿼리문 생성
-		$sql = "INSERT INTO map_storage (map_id, user_id, map_name, map_locate, map_type, full_map ) VALUES ('".$cur_map_id['map_id']."', '".$map_info['user_id']."', '".$map_info['map_name']."', '".$map_info['map_locate']."', '".$map_info['map_type']."', 'Static/map_capture/testurl.jpg')";
+		$sql = "INSERT INTO map_storage (map_id, user_id, map_name, map_locate, map_type, description ) VALUES ('".$cur_map_id['map_id']."', '".$map_info['user_id']."', '".$map_info['map_name']."', '".$map_info['map_locate']."', '".$map_info['map_type']."', '".$map_info['description']."')";
 		// 쿼리 실행
 
 		$db_result = mysql_query($sql, $connect);
