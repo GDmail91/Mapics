@@ -4,7 +4,7 @@
 	$Auth = new Auth;
 
 	$user = $Auth->user_info($_POST['user_id']);
-
+	//var_dump(urlencode($user[0]['user_photo']));
 	$result = array(
 		'email'=>$user[0]['email'],
 		'phone'=>$user[0]['phone'],

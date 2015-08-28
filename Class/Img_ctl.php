@@ -210,7 +210,11 @@ class Img_ctl extends _MapicsDB{
 
 	// 사진 업로드
 	function img_upload($file_path, $user_id){
-		$file_name = urlencode(basename( $_FILES['uploaded_file']['name']));
+		// mime 타입 가져오기 위한 변수
+		$str = explode('.', $_FILES['uploaded_file']['name']);
+		$mime = array_reverse($str) ; // 뒤집어서 첫번째 인덱스에 mime type 오도록설정
+
+		$file_name = "profile_".$user_id.".".$mime[0];
 		$file_path = $file_path.$file_name;
 
 		// 사진 서번에 업로드
@@ -230,6 +234,43 @@ class Img_ctl extends _MapicsDB{
 
 			// 쿼리문 생성
 			$sql = "UPDATE mapics_user SET user_photo = 'Static/profile/".$file_name."' WHERE user_id = ".$user_id;
+
+			// 좋아요 쿼리 실행
+			mysql_query($sql, $connect);
+
+		} else {
+			$result = array('result'=>'false');
+		}
+
+		return $result;
+	}
+
+	// 지도 캡쳐 업로드
+	function map_capture_upload($file_path, $map_id){
+		// mime 타입 가져오기 위한 변수
+		$str = explode('.', $_FILES['uploaded_file']['name']);
+		$mime = array_reverse($str) ; // 뒤집어서 첫번째 인덱스에 mime type 오도록설정
+
+		$file_name = "mapcap_".$map_id.".".$mime[0];
+		$file_path = $file_path.$file_name;
+
+		// 사진 서번에 업로드
+		if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
+			// 성공시
+			$result = array('result'=>'true');
+
+			// DB에 URL 저장
+			// 데이터베이스 접속
+			$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+				die ("SQL server에 연결할 수 없습니다.");
+			mysql_query("SET NAMES UTF8");
+			mysql_select_db($this->db_dbname, $connect);
+
+			// 세션 시작
+			session_start();
+
+			// 쿼리문 생성
+			$sql = "UPDATE map_storage SET full_map = 'Static/map_capture/".$file_name."' WHERE map_id = ".$map_id;
 
 			// 좋아요 쿼리 실행
 			mysql_query($sql, $connect);
