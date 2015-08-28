@@ -6,7 +6,7 @@
 
 	$liker = $img_ctl->map_like($_POST['map_id']);
 
-	if ( !empty($liker)) {
+	if ( is_int($liker)) {
 		$result = array(
 			'result'=>'true',
 			'liker'=>$liker
