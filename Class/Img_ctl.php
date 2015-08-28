@@ -209,7 +209,7 @@ class Img_ctl extends _MapicsDB{
 	}
 
 	// 사진 업로드
-	function img_upload($file_path, $user_id){
+	function profile_upload($file_path, $user_id){
 		// mime 타입 가져오기 위한 변수
 		$str = explode('.', $_FILES['uploaded_file']['name']);
 		$mime = array_reverse($str) ; // 뒤집어서 첫번째 인덱스에 mime type 오도록설정

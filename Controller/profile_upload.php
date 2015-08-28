@@ -7,7 +7,7 @@
 	$file_path = '../Static/profile/';
 	
 	// 저장 결과
-	$upload_result = $Img_ctl->img_upload($file_path, $_POST['user_id']);
+	$upload_result = $Img_ctl->profile_upload($file_path, $_POST['user_id']);
 
 	echo urldecode( json_encode ( $upload_result ));
 ?>
