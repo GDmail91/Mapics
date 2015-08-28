@@ -72,6 +72,16 @@
 		return $img;
 	}
 
+	function set_description($map_id, $description) {
+		// db 연결
+		$db = new ImgDB;
+		
+		// db 실행
+		$map_result = $db->set_description($map_id, $description);
+
+		return $map_result;
+	}
+
 	// 맵 업로드
 	function upload_Map($map_info) {
 		// db 연결
@@ -296,8 +306,22 @@ class ImgDB extends _MapicsDB{
 		return $resultArray;
 	}
 
-	function getMapCount() {
+	function set_description($map_id, $description) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
 
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "UPDATE map_storage SET description = '".$description."' WHERE map_id = '".$map_id."'";
+		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+
+		return $result;
 	}
 
 	// 사진 올리기 
@@ -364,7 +388,7 @@ class ImgDB extends _MapicsDB{
 		$cur_map_id['map_id'] += 1;
 
 		// 쿼리문 생성
-		$sql = "INSERT INTO map_storage (map_id, user_id, map_name, map_locate, map_type, description ) VALUES ('".$cur_map_id['map_id']."', '".$map_info['user_id']."', '".$map_info['map_name']."', '".$map_info['map_locate']."', '".$map_info['map_type']."', '".$map_info['description']."')";
+		$sql = "INSERT INTO map_storage (map_id, user_id, map_name, map_locate, map_type ) VALUES ('".$cur_map_id['map_id']."', '".$map_info['user_id']."', '".$map_info['map_name']."', '".$map_info['map_locate']."', '".$map_info['map_type']."')";
 		// 쿼리 실행
 
 		$db_result = mysql_query($sql, $connect);

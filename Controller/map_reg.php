@@ -8,8 +8,7 @@
 		'user_id'=>$_POST['user_id'], 
 		'map_name'=>$_POST['map_name'], 
 		'map_locate'=>$_POST['map_locate'],
-		'map_type'=>$_POST['map_type'],
-		'description'=>$_POST['description']
+		'map_type'=>$_POST['map_type']
 		)
 	);
 
