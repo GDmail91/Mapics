@@ -2,6 +2,7 @@
 
 ////////////////////// MODEL CALSS
 include_once '_MapicsDB.php';
+include_once 'password.php';
 
 class Img_ctl extends _MapicsDB{
 	// 사진 좋아요 클릭 
@@ -208,11 +209,31 @@ class Img_ctl extends _MapicsDB{
 	}
 
 	// 사진 업로드
-	function img_upload($file_path){
-		$file_path = $file_path . basename( $_FILES['uploaded_file']['name']);
+	function img_upload($file_path, $user_id){
+		$file_name = urlencode(basename( $_FILES['uploaded_file']['name']));
+		$file_path = $file_path.$file_name;
 
+		// 사진 서번에 업로드
 		if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
+			// 성공시
 			$result = array('result'=>'true');
+
+			// DB에 URL 저장
+			// 데이터베이스 접속
+			$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+				die ("SQL server에 연결할 수 없습니다.");
+			mysql_query("SET NAMES UTF8");
+			mysql_select_db($this->db_dbname, $connect);
+
+			// 세션 시작
+			session_start();
+
+			// 쿼리문 생성
+			$sql = "UPDATE mapics_user SET user_photo = 'Static/profile/".$file_name."' WHERE user_id = ".$user_id;
+
+			// 좋아요 쿼리 실행
+			mysql_query($sql, $connect);
+
 		} else {
 			$result = array('result'=>'false');
 		}
