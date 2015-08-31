@@ -42,7 +42,7 @@
 	}
 
 	// 맵 캡쳐 전체($num 개수만큼) 불러오기
-	function getMapAllCapture($num = 5) {
+	function getMapAllCapture($num = 30) {
 		// db 연결
 		$db = new ImgDB;
 		// db에서 map_url 가져옴 (map_url, full_map, description, liker)
@@ -252,7 +252,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT map_id, user_id, full_map, description, liker FROM map_storage LIMIT ".$num  ;
+		$sql = "SELECT map_id, user_id, full_map, description, liker FROM map_storage ORDER BY edit_date DESC LIMIT ".$num  ;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 		
@@ -317,7 +317,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "UPDATE map_storage SET description = '".$description."' WHERE map_id = '".$map_id."'";
+		$sql = "UPDATE map_storage SET description = '".$description."', edit_date = CURRENT_TIMESTAMP() WHERE map_id = '".$map_id."'";
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 
@@ -340,6 +340,8 @@ class ImgDB extends _MapicsDB{
 		// 쿼리 실행
 		if($result = mysql_query($sql, $connect)) {
 			echo "<DB insert success>";
+			$update_sql = "UPDATE 'map_storage' SET 'edit_date' = CURRENT_TIMESTAMP()";
+			mysql_query($update_sql, $connent);
 		} else {
 			echo "<DB insert fail>";
 		}
@@ -359,7 +361,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "UPDATE 'map_storage' SET 'map_id' = '".$map_id."', 'full_map' = '".$full_map."')";
+		$sql = "UPDATE 'map_storage' SET 'map_id' = '".$map_id."', 'full_map' = '".$full_map."', 'edit_date'=CURRENT_TIMESTAMP())";
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 

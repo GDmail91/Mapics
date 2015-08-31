@@ -270,7 +270,7 @@ class Img_ctl extends _MapicsDB{
 			session_start();
 
 			// 쿼리문 생성
-			$sql = "UPDATE map_storage SET full_map = 'Static/map_capture/".$file_name."' WHERE map_id = ".$map_id;
+			$sql = "UPDATE map_storage SET full_map = 'Static/map_capture/".$file_name."', edit_date = CURRENT_TIMESTAMP() WHERE map_id = ".$map_id;
 
 			// 좋아요 쿼리 실행
 			mysql_query($sql, $connect);

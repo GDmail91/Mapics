@@ -26,6 +26,7 @@
 		array_push($map_list, $map+array(
 			'nickname'=>$user_info['nickname'], // 사용자 정보에서 nickname 값 가져옴
 			'tag_name'=>$tag_name)); // tag 이름 가져옴
+		$tag_name = null;
 	}
 
 	for ($i=0; $i < count($maps); $i++) { 
