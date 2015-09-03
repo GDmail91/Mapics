@@ -12,7 +12,7 @@
 		$img = $db->getImages($map_id);
 
 		$map = array(
-			'map_url'=>$map_result['map_url'],  // 지도 배경
+			'map_url'=>$map_result['map_capture'],  // 지도 배경
 			'results'=>$img
 			);
 		return $map;
