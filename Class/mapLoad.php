@@ -63,7 +63,7 @@
 	}
 
 	// 사진 한장에 대한 정보 불러오기
-	function getImage($img_id) {
+	function get_image($img_id) {
 		// db 연결
 		$db = new ImgDB;
 		// db에서 사진에 대한 정보 가져옴
