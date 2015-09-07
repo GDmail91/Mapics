@@ -178,8 +178,8 @@ class ImgDB extends _MapicsDB{
 		while ( $row = mysql_fetch_assoc($result)) {  
 			$arrayMiddle = array (  
 				"img_id" => (int) $row ['img_id'] ,  
-				"loc_x" => (int) $row ['loc_x'] ,  
-				"loc_y" => (int) $row ['loc_y'],
+				"loc_x" => (double) $row ['loc_x'] ,  
+				"loc_y" => (double) $row ['loc_y'],
 				"img_url" => $row ['img_url'],
 				"description" => $row['description'],
 				"liker" => (int) $row ['liker']
@@ -212,8 +212,8 @@ class ImgDB extends _MapicsDB{
 		
 		// $resultArray에 담기
 		$resultArray = array (  
-			"loc_x" => (int) $row ['loc_x'] ,  
-			"loc_y" => (int) $row ['loc_y'],
+			"loc_x" => (double) $row ['loc_x'] ,  
+			"loc_y" => (double) $row ['loc_y'],
 			"img_url" => $row ['img_url'],
 			"description" => $row['description'],
 			"liker" => (int) $row ['liker']

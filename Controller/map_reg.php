@@ -24,7 +24,7 @@
 				break;
 		}
 	} else {
-		$hash_result = false;
+		$hash_result = true;
 	}
 
 	if ($reg_result['db_result'] && $hash_result) {
