@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
 </head>   
 <body>
-<form action="http://localhost:8090/Mapics/Controller/img_photo.php" method="POST" name="addForm" enctype="multipart/form-data">
+<form action="http://localhost:8090/Mapics/Controller/img_upload.php" method="POST" name="addForm" enctype="multipart/form-data">
    <input type="hidden" name="user_id" value="1" />
    <input type="hidden" name="nickname" value="테스트닉넴2" />
    <input type="hidden" name="map_locate" value="Jeju"/>
