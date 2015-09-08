@@ -199,10 +199,10 @@ class Img_ctl extends _MapicsDB{
 		// 쿼리문 생성
 		$sql = "INSERT INTO comments (category, dest_id, user_id, comment, nickname) VALUES ('".$category."', '".$dest_id."', '".$user_id."', '".$comment."', '".$nickname."')";
 	
-		if($result = mysql_query($sql, $connect)) {
-			echo "DB insert success";
+		if(mysql_query($sql, $connect)) {
+			$result = array("result"=>"true");
 		} else {
-			echo "DB insert fail";
+			$result = array("result"=>"false");
 		}
 
 		return $result;

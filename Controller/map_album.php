@@ -5,6 +5,6 @@
 
 	$map_album = $mapLoad->getMap($_POST['map_id']);
 
-	echo(urldecode( json_encode ( $map_album ))) ;
+	echo urldecode( json_encode ( $map_album )) ;
 
 ?>
