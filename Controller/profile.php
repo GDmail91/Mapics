@@ -9,13 +9,13 @@
 		$user = $Auth->user_info($_SESSION['user_id']);
 	//var_dump(urlencode($user[0]['user_photo']));
 	$result = array(
-		'email'=>$user[0]['email'],
-		'phone'=>$user[0]['phone'],
-		'nickname'=>$user[0]['nickname'],
-		'career'=>$user[0]['career'],
-		'user_photo'=>$user[0]['user_photo'],
-		'follower'=>$user[1]['follower'],
-		'following'=>$user[1]['following']
+		'email'=>$user['email'],
+		'phone'=>$user['phone'],
+		'nickname'=>$user['nickname'],
+		'career'=>$user['career'],
+		'user_photo'=>$user['user_photo'],
+		'follower'=>$user['follower'],
+		'following'=>$user['following']
 		);
 
 	echo urldecode( json_encode ( $result )) ;

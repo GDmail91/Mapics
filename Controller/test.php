@@ -19,29 +19,10 @@ echo "<br>";
 if ($_COOKIE['PHPSESSID'] === session_id()) {
 	echo TRUE;
 }*/
+include "../Class/Auth.php";
 
+$auth = new Auth;
 
-
-session_start();
-
-function Get($param,$default=null) {
- return isset( $_GET[$param]) ? 
- 	$_GET[$param] : (isset($_POST[$param]) ? 
- 		$_POST[$param] : $default);
-}
-
-// 세션에 auth_user가 있는경우
-if ($_SESSION['auth_user'] == 'test') {
-	echo "already login";
-}
-// 또는 Get이나 Post로 데이터가 온경우
-else if(Get('id')=='test'&&Get('pwd')=='test') {
-	$_SESSION['auth_user'] = 'test';
-	echo "login success";
-} 
-// 아무것도 없는경우
-else {
-	echo "please login";
-}
+var_dump( $auth->user_info(1) );
 
 ?>
