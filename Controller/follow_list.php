@@ -3,8 +3,11 @@
 
 	$Auth = new Auth;
 
-	$follow_result = $Auth->get_follow($_POST['user_id']);
-
+	if (!empty($_POST['user_id'])) 
+		$follow_result = $Auth->get_follow($_POST['user_id']);
+	else 
+		$follow_result = $Auth->get_follow($_SESSION['user_id']);
+	
 	$follow_list = array();
 	foreach ($follow_result as $user_id) {
 		$user_info = $Auth->user_info($user_id);
@@ -19,7 +22,6 @@
 				'is_follow'=>'true'
 			));
 	}
-
 
 	echo urldecode( json_encode ( $follow_list )) ;
 
