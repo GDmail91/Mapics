@@ -3,7 +3,10 @@
 
 	$Auth = new Auth;
 
-	$user = $Auth->user_info($_POST['user_id']);
+	if (isset($_POST['user_id'])) 
+		$user = $Auth->user_info($_POST['user_id']);
+	else 
+		$user = $Auth->user_info($_SESSION['user_id']);
 	//var_dump(urlencode($user[0]['user_photo']));
 	$result = array(
 		'email'=>$user[0]['email'],

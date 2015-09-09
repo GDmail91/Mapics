@@ -19,17 +19,29 @@ echo "<br>";
 if ($_COOKIE['PHPSESSID'] === session_id()) {
 	echo TRUE;
 }*/
-session_start();
-//echo $_SESSION['nickname']." ".$_SESSION['user_id']." ".$_SESSION['is_login'];
-//$sessid = $_GET['sessid'];
-//var_dump( $_COOKIE['PHPSESSID']);
-$array = array(
-	'nickname'=>$_SESSION['nickname'],
-	'user_id'=>$_SESSION['user_id'],
-	'is_login'=>$_SESSION['is_login'],
-	'phpsessid'=>$_COOKIE['PHPSESSID']
-	);
-echo urldecode( json_encode ( $array )) ;
 
-//echo urldecode( json_encode ( $array )) ;
+
+
+session_start();
+
+function Get($param,$default=null) {
+ return isset( $_GET[$param]) ? 
+ 	$_GET[$param] : (isset($_POST[$param]) ? 
+ 		$_POST[$param] : $default);
+}
+
+// 세션에 auth_user가 있는경우
+if ($_SESSION['auth_user'] == 'test') {
+	echo "already login";
+}
+// 또는 Get이나 Post로 데이터가 온경우
+else if(Get('id')=='test'&&Get('pwd')=='test') {
+	$_SESSION['auth_user'] = 'test';
+	echo "login success";
+} 
+// 아무것도 없는경우
+else {
+	echo "please login";
+}
+
 ?>
