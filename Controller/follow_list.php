@@ -13,8 +13,8 @@
 		
 		array_push($follow_list, array(
 				'user_id'=>$user_id,
-				'nickname'=>$user_info[0]['nickname'],
-				'user_photo'=>$user_info[0]['user_photo'],
+				'nickname'=>$user_info['nickname'],
+				'user_photo'=>$user_info['user_photo'],
 				// 여기도 변경
 				'is_follow'=>'true'
 			));
