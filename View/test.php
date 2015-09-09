@@ -4,8 +4,8 @@
     <meta charset="utf-8"/>
 </head>   
 <body>
-<form action="http://128.199.102.18/Mapics/Controller/img_photo.php" method="POST" name="addForm" enctype="multipart/form-data">
-   <input type="hidden" name="user_id" value="1" />
+<form action="http://localhost:8090/Mapics/Controller/profile.php" method="POST" name="addForm" enctype="multipart/form-data">
+   
    <input type="hidden" name="nickname" value="테스트닉넴2" />
    <input type="hidden" name="map_locate" value="Jeju"/>
    <input type="hidden" name="dest_id" value="24"/>

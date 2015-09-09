@@ -1,9 +1,10 @@
 <?
 	include '../Class/Auth.php';
-
+	session_start();
+	
 	$Auth = new Auth;
 
-	if (isset($_POST['user_id'])) 
+	if (!empty($_POST['user_id'])) 
 		$user = $Auth->user_info($_POST['user_id']);
 	else 
 		$user = $Auth->user_info($_SESSION['user_id']);
