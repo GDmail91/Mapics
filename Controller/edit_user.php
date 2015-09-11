@@ -1,10 +1,11 @@
 <?
 	include '../Class/Auth.php';
+	session_start();
 
 	if ($_SESSION['is_login'] === true) {
 		$Auth = new Auth;
 		$result = $Auth->edit_user(
-			$_POST['user_id'],
+			$_SESSION['user_id'],
 			$_POST['nickname'], 
 			$_POST['career'], 
 			$_POST['email'], 

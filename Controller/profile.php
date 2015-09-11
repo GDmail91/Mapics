@@ -20,6 +20,8 @@
 			'follower'=>$user['follower'],
 			'following'=>$user['following']
 			);
+	} else {
+		$result = array( 'result'=>'false' );
 	}
 	echo urldecode( json_encode ( $result )) ;
 
