@@ -1,6 +1,8 @@
 <?
 	include '../Class/Auth.php';
 
+	session_start();
+
 	$Auth = new Auth;
 
 	if (!empty($_POST['user_id'])) 

@@ -1,6 +1,8 @@
 <?
 	include '../Class/mapLoad.php';
 
+	session_start();
+
 	if ($_SESSION['is_login'] === true) {
 		$mapLoad = new mapLoad;
 		

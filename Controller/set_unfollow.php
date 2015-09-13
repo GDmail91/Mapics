@@ -1,6 +1,8 @@
 <?
 	include '../Class/Auth.php';
 
+	session_start();
+	
 	if ($_SESSION['is_login'] === true) {	
 		$Auth = new Auth;
 

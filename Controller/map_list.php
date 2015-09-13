@@ -3,15 +3,17 @@
 	include '../Class/Auth.php';
 	include '../Class/Hash_tag.php';
 
+	session_start();
+
 	$mapLoad = new mapLoad;
 	$auth = new Auth;
 	$hash_tag = new Hash_tag;
 
 	// num 값이 있는 경우 num값 만큼만 가져옴 (기본값 5)
 	if ($_POST['num']) {
-		$maps = $mapLoad->getMapCaptureById($_POST['user_id'], $_POST['num']);
+		$maps = $mapLoad->getMapCaptureById($_SESSION['user_id'], $_POST['num']);
 	} else {
-		$maps = $mapLoad->getMapCaptureById($_POST['user_id']);
+		$maps = $mapLoad->getMapCaptureById($_SESSION['user_id']);
 	}
 
 	$map_list[] = null ; // 결과 담을 변수

@@ -2,6 +2,7 @@
 	include '../Class/mapLoad.php';
 	include '../Class/Hash_tag.php';
 
+	session_start();
 	if ($_SESSION['is_login'] === true) {
 		$mapReg = new mapLoad;
 

@@ -1,12 +1,13 @@
 <?
 	include '../Class/mapLoad.php';
 	include '../Class/Hash_tag.php';
+	session_start();
 
 	if ($_SESSION['is_login'] === true) {
 		$mapReg = new mapLoad;
 
 		$reg_result = $mapReg->upload_map(array(
-			'user_id'=>$_POST['user_id'], 
+			'user_id'=>$_SESSION['user_id'], 
 			'map_name'=>$_POST['map_name'], 
 			'map_locate'=>$_POST['map_locate'],
 			'map_type'=>$_POST['map_type']
