@@ -3,7 +3,7 @@
 	include '../Class/Img_ctl.php';
 	session_start();
 
-	if ($_SESSION['is_login']) {
+	if ($_SESSION['is_login'] === true) {
 		$mapLoad = new mapLoad;
 		$Img_ctl = new Img_ctl;
 
