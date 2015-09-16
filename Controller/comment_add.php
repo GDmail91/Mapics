@@ -1,5 +1,5 @@
 <?
-include '../Class/img_ctl.php';
+include '../Class/Img_ctl.php';
 
 	session_start();
 	if ($_SESSION['is_login'] === true) {

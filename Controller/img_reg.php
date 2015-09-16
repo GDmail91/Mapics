@@ -11,6 +11,7 @@
 			'map_id'=>$_POST['map_id'], 
 			'loc_x'=>$_POST['loc_x'], 
 			'loc_y'=>$_POST['loc_y'],
+			'place_id'=>$_POST['place_id'],
 			'description'=>$_POST['description']
 			)
 		);
