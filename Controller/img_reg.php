@@ -43,7 +43,7 @@
 		if ($reg_result['db_result'] && $upload_result) {
 			$result = array('result'=>'true', 'img_id'=>(string)$reg_result['img_id']);
 		} else {
-			$result = array('result'=>'false');
+			$result = array('result'=>'false', 'msg'=>'업로드 실패');
 		}
 	} else {
 		$result = array('result'=>'false', 'msg'=>'로그인이 필요합니다');

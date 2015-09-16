@@ -6,7 +6,7 @@ include_once 'password.php';
 
 class Img_ctl extends _MapicsDB{
 	// 사진 좋아요 클릭 
-	function img_like($img_id) {
+	function img_like($img_id, $user_id) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -18,21 +18,52 @@ class Img_ctl extends _MapicsDB{
 
 		// 쿼리문 생성
 		$sql = "UPDATE image_storage SET liker = liker+1 WHERE img_id = ".$img_id;
-
 		// 좋아요 쿼리 실행
 		$result = mysql_query($sql, $connect);
+
+		// 쿼리문 생성
+		$sql2 = "INSERT INTO img_like_table (img_id, user_id) VALUES ('".$img_id."', '".$user_id."')";
+		// 좋아요 등록
+		$result = mysql_query($sql2, $connect);
 		
 		// 업데이트 된 값 전달
-		$sql2 = "SELECT liker FROM image_storage WHERE img_id=".$img_id;
-		$result = mysql_query($sql2, $connect);
+		$sql3 = "SELECT liker FROM image_storage WHERE img_id=".$img_id;
+		$result = mysql_query($sql3, $connect);
 		// 쿼리 실행 결과
 		$row = mysql_fetch_assoc($result);
 		
 		return (int)$row['liker'];
 	}
 
+	// 사진 좋아요 되있는지 확인
+	function is_img_liker($img_id, $user_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+		
+		// 쿼리문 생성
+		$sql = "SELECT COUNT(user_id) AS is_like FROM img_like_table WHERE img_id=".$img_id." AND user_id=".$user_id;
+		$result = mysql_query($sql, $connect);
+		// 쿼리 실행 결과
+		$row = mysql_fetch_assoc($result);
+		$is_like = (int)$row['is_like'];
+		
+		if ($is_like > 0) {
+			$db_result = true;
+		} else {
+			$db_result = false;
+		}
+
+		return $db_result;
+	}
+
 	// 지도 좋아요 클릭 
-	function Map_like($map_id) {
+	function Map_like($map_id, $user_id) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -44,21 +75,52 @@ class Img_ctl extends _MapicsDB{
 
 		// 쿼리문 생성
 		$sql = "UPDATE map_storage SET liker = liker+1 WHERE map_id = ".$map_id;
-
 		// 좋아요 쿼리 실행
 		$result = mysql_query($sql, $connect);
+
+		// 쿼리문 생성
+		$sql2 = "INSERT INTO map_like_table (map_id, user_id) VALUES ('".$map_id."', '".$user_id."')";
+		// 좋아요 등록
+		$result = mysql_query($sql2, $connect);
 		
 		// 업데이트 된 값 전달
-		$sql2 = "SELECT liker FROM map_storage WHERE map_id=".$map_id;
-		$result = mysql_query($sql2, $connect);
+		$sql3 = "SELECT liker FROM map_storage WHERE map_id=".$map_id;
+		$result = mysql_query($sql3, $connect);
 		// 쿼리 실행 결과
 		$row = mysql_fetch_assoc($result);
 		
 		return (int)$row['liker'];
 	}
 
-	// 사진 좋아요 클릭 
-	function img_dislike($img_id) {
+	// 지도 좋아요 되있는지 확인
+	function is_map_liker($map_id, $user_id) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+		
+		// 쿼리문 생성
+		$sql = "SELECT COUNT(user_id) AS is_like FROM map_like_table WHERE map_id=".$map_id." AND user_id=".$user_id;
+		$result = mysql_query($sql, $connect);
+		// 쿼리 실행 결과
+		$row = mysql_fetch_assoc($result);
+		$is_like = (int)$row['is_like'];
+		
+		if ($is_like > 0) {
+			$db_result = true;
+		} else {
+			$db_result = false;
+		}
+
+		return $db_result;
+	}
+
+	// 사진 좋아요 취소 클릭 
+	function img_dislike($img_id, $user_id) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -70,21 +132,25 @@ class Img_ctl extends _MapicsDB{
 
 		// 쿼리문 생성
 		$sql = "UPDATE image_storage SET liker = liker-1 WHERE img_id = ".$img_id;
-
 		// 좋아요 쿼리 실행
 		$result = mysql_query($sql, $connect);
+
+		// 쿼리문 생성
+		$sql2 = "DELETE FROM img_like_table WHERE img_id=".$img_id." AND user_id =".$user_id;
+		// 좋아요 취소 등록
+		$result = mysql_query($sql2, $connect);
 		
 		// 업데이트 된 값 전달
-		$sql2 = "SELECT liker FROM image_storage WHERE img_id=".$img_id;
-		$result = mysql_query($sql2, $connect);
+		$sql3 = "SELECT liker FROM image_storage WHERE img_id=".$img_id;
+		$result = mysql_query($sql3, $connect);
 		// 쿼리 실행 결과
 		$row = mysql_fetch_assoc($result);
 		
 		return (int)$row['liker'];
 	}
 
-	// 지도 좋아요 클릭 
-	function Map_dislike($map_id) {
+	// 지도 좋아요 취소 클릭 
+	function Map_dislike($map_id, $user_id) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -96,9 +162,13 @@ class Img_ctl extends _MapicsDB{
 
 		// 쿼리문 생성
 		$sql = "UPDATE map_storage SET liker = liker-1 WHERE map_id = ".$map_id;
-
 		// 좋아요 쿼리 실행
 		$result = mysql_query($sql, $connect);
+
+		// 쿼리문 생성
+		$sql2 = "DELETE FROM map_like_table WHERE map_id=".$map_id." AND user_id =".$user_id;
+		// 좋아요 취소 등록
+		$result = mysql_query($sql2, $connect);
 		
 		// 업데이트 된 값 전달
 		$sql2 = "SELECT liker FROM map_storage WHERE map_id=".$map_id;

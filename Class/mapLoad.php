@@ -63,7 +63,7 @@
 	}
 
 	// 사진 한장에 대한 정보 불러오기
-	function get_image($img_id) {
+	function get_image($img_id, $user_id) {
 		// db 연결
 		$db = new ImgDB;
 		// db에서 사진에 대한 정보 가져옴
@@ -210,14 +210,19 @@ class ImgDB extends _MapicsDB{
 		// 쿼리 실행 결과
 		$row = mysql_fetch_assoc($result);
 		
-		// $resultArray에 담기
-		$resultArray = array (  
-			"loc_x" => (double) $row ['loc_x'] ,  
-			"loc_y" => (double) $row ['loc_y'],
-			"img_url" => $row ['img_url'],
-			"description" => $row['description'],
-			"liker" => (int) $row ['liker']
-		);
+		if ($row != null) {
+			// $resultArray에 담기
+			$resultArray = array(  
+				"result" => 'true',
+				"loc_x" => (double) $row ['loc_x'] ,  
+				"loc_y" => (double) $row ['loc_y'],
+				"img_url" => $row ['img_url'],
+				"description" => $row['description'],
+				"liker" => (int) $row ['liker']
+			);
+		} else {
+			$resultArray = array("result"=>'false');
+		}
 		return $resultArray;
 	}
 

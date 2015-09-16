@@ -5,7 +5,7 @@ include '../Class/Auth.php';
 session_start();
 
 if ($_SESSION['is_login'] == true) {
-	$result = array("result"=>'true');
+	$result = array("result"=>'true', "user_id"=>$_SESSION['user_id']);
 } else {
 	// 로그인
 	$auth = new Auth;

@@ -2,12 +2,14 @@
 	include '../Class/mapLoad.php';
 	include '../Class/Auth.php';
 	include '../Class/Hash_tag.php';
+	include '../Class/Img_ctl.php';
 
 	session_start();
 
 	$mapLoad = new mapLoad;
 	$auth = new Auth;
 	$hash_tag = new Hash_tag;
+	$Img_ctl = new Img_ctl;
 
 	// num 값이 있는 경우 num값 만큼만 가져옴 (기본값 5)
 	if ($_POST['num']) {
@@ -25,7 +27,13 @@
 			$tag_name .= "#".$hash_tag->get_tag_name($tag_id)." ";	// 태그 네임 저장
 		}
 
+		if ($Img_ctl->is_img_liker($_POST['img_id'], $_SESSION['user_id']))
+			$is_like='ture';
+		else 
+			$is_like='false';
+
 		array_push($map_list, $map+array(
+			'is_like'=>$is_like,
 			'nickname'=>$user_info['nickname'], // 사용자 정보에서 nickname 값 가져옴
 			'tag_name'=>$tag_name)); // tag 이름 가져옴
 	}
