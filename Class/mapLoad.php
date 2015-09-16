@@ -169,7 +169,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT img_id, map_id, loc_x, loc_y, img_url, description, liker FROM image_storage WHERE map_id =".$map_id;
+		$sql = "SELECT img_id, map_id, loc_x, loc_y, place_id, img_url, description, liker FROM image_storage WHERE map_id =".$map_id;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 
@@ -180,6 +180,7 @@ class ImgDB extends _MapicsDB{
 				"img_id" => (int) $row ['img_id'] ,  
 				"loc_x" => (double) $row ['loc_x'] ,  
 				"loc_y" => (double) $row ['loc_y'],
+				"place_id" => $row ['place_id'],
 				"img_url" => $row ['img_url'],
 				"description" => $row['description'],
 				"liker" => (int) $row ['liker']
@@ -203,7 +204,7 @@ class ImgDB extends _MapicsDB{
 		session_start();
 
 		// 쿼리문 생성
-		$sql = "SELECT loc_x, loc_y, img_url, description, liker FROM image_storage WHERE img_id =".$img_id;
+		$sql = "SELECT loc_x, loc_y, place_id, img_url, description, liker FROM image_storage WHERE img_id =".$img_id;
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
 
@@ -216,6 +217,7 @@ class ImgDB extends _MapicsDB{
 				"result" => 'true',
 				"loc_x" => (double) $row ['loc_x'] ,  
 				"loc_y" => (double) $row ['loc_y'],
+				"place_id" => $row ['place_id'],
 				"img_url" => $row ['img_url'],
 				"description" => $row['description'],
 				"liker" => (int) $row ['liker']
@@ -406,7 +408,7 @@ class ImgDB extends _MapicsDB{
 		$cur_img_id['img_id'] += 1;
 
 		// 쿼리문 생성
-		$sql = "INSERT INTO image_storage (img_id, map_id, loc_x, loc_y, img_url, description ) VALUES ('".$cur_img_id['img_id']."', '".$img_info['map_id']."', '".$img_info['loc_x']."', '".$img_info['loc_y']."', 'Static/image/img_".$cur_img_id['img_id'].".jpg', '".$img_info['description']."')";
+		$sql = "INSERT INTO image_storage (img_id, map_id, loc_x, loc_y, place_id, img_url, description ) VALUES ('".$cur_img_id['img_id']."', '".$img_info['map_id']."', '".$img_info['loc_x']."', '".$img_info['loc_y']."', '".$img_info['place_id']."', 'Static/image/img_".$cur_img_id['img_id'].".jpg', '".$img_info['description']."')";
 		// 쿼리 실행
 
 		$db_result = mysql_query($sql, $connect);
