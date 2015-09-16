@@ -8,12 +8,15 @@
 		$Auth = new Auth;
 
 		$comments = $Img_ctl->getComments($_POST['img_id'], 0);
+
+		$co_result = array();
 		foreach ($comments as $comment) {
-			$user_info = $Auth->user_info($comment->user_id)
-			$profile_img = $user_info->user_photo;	
+			$user_info = $Auth->user_info($comment['user_id']);
+			$profile_img = array( 'user_photo'=>$user_info['user_photo']);
+			array_push($co_result, $comment + $profile_img);
 		}
 
-		$result = array('result'=>'true', 'comments' => $comments); 
+		$result = array('result'=>'true', 'comments' => $co_result); 
 		
 	} else {
 		$result = array('result'=>'false', 'msg'=>'로그인이 필요합니다');
