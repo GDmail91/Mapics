@@ -1,6 +1,7 @@
 <?
 	include '../Class/mapLoad.php';
 	include '../Class/Hash_tag.php';
+	include '../Class/Img_ctl.php';
 
 	session_start();
 	if ($_SESSION['is_login'] === true) {
@@ -30,7 +31,16 @@
 			$hash_result = false;
 		}
 		*/
-		if ($reg_result['db_result']) {
+
+		$Img_ctl = new Img_ctl;
+
+		// 저장 경로
+		$file_path = '../Static/image/';
+		// 저장 결과
+		$upload_result = $Img_ctl->image_upload($file_path, $reg_result['img_id']);
+
+		// 결과가 모두 성공일 경우
+		if ($reg_result['db_result'] && $upload_result) {
 			$result = array('result'=>'true', 'img_id'=>(string)$reg_result['img_id']);
 		} else {
 			$result = array('result'=>'false');
