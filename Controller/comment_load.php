@@ -7,7 +7,7 @@
 		$Img_ctl = new Img_ctl;
 		$Auth = new Auth;
 
-		$comments = $Img_ctl->getComments($_POST['dest_id'], 0);
+		$comments = $Img_ctl->getComments($_POST['img_id'], 0);
 
 		$co_result = array();
 		foreach ($comments as $comment) {
