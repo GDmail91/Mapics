@@ -64,11 +64,11 @@
 	}
 
 	// 맵 캡처 아이디로 불러오기
-	function getMapCaptureById($user_id) {
+	function getMapCaptureById($user_id, $num = 5) {
 		// db 연결
 		$db = new ImgDB;
 		
-		$map_result .= $db->getMapById($user_id);
+		$map_result = $db->getMapById($user_id, $num);
 
 		return $map_result;
 	}

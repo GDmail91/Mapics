@@ -11,10 +11,18 @@
 	$hash_tag = new Hash_tag;
 	$Img_ctl = new Img_ctl;
 
-	// num 값이 있는 경우 num값 만큼만 가져옴 (기본값 5)
-	if ($_POST['num']) {
+	
+	if (isset($_POST['user_id']) && isset($_POST['num'])) {
+		// user_id 와 num 값이 있는경우
+		$maps = $mapLoad->getMapCaptureById($_POST['user_id'], $_POST['num']);
+	} else if (isset($_POST['user_id'])) {
+		// user_id 만 있는경우 num 기본값 5
+		$maps = $mapLoad->getMapCaptureById($_POST['user_id']);
+	} else if (isset($_POST['num'])) {
+		// num 값만 있는 경우
 		$maps = $mapLoad->getMapCaptureById($_SESSION['user_id'], $_POST['num']);
 	} else {
+		// 아무 값도 없는경우 num 기본값 5
 		$maps = $mapLoad->getMapCaptureById($_SESSION['user_id']);
 	}
 

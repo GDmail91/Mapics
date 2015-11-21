@@ -35,7 +35,21 @@
  		// db 연결
 		$db = new TagDB;
 		// tag_name 저장
-		$db_result = $db->get_map_by_tag($tag_name);
+		$tag_name_array = explode(' ', trim($tag_name));
+		
+		// tag_name이 빈값인지 확인
+		if ($tag_name != null) {
+			// 비지 않았다면 각 tag_name에 해당하는 tag_id 가져옴
+			$tag_ids = array();
+			foreach ($tag_name_array as $tag_name) {
+				$temp_id = $db->get_tag_by_name(str_replace("#", "", $tag_name));
+
+				if ($temp_id != null)
+					array_push($tag_ids, $temp_id);
+			}
+			$db_result = $db->get_map_by_tag($tag_ids);
+		} else 
+			$db_result = null;
 
 		return $db_result;
  	}
@@ -178,7 +192,7 @@ class TagDB extends _MapicsDB{
 		return $row['tag_id'];
 	}
 
-	function get_map_by_tag($tag_name) {
+	function get_map_by_tag($tag_ids) {
 		// 데이터베이스 접속
 		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
 			die ("SQL server에 연결할 수 없습니다.");
@@ -188,9 +202,18 @@ class TagDB extends _MapicsDB{
 		// 세션 시작
 		session_start();
 
-		$tag_id = $this->get_tag_by_name($tag_name);
 		// 쿼리문 생성
-		$sql = "SELECT map_id FROM map_link_hash WHERE tag_id='".$tag_id."'";
+		$sql = "SELECT map_id FROM map_link_hash WHERE tag_id IN ('";
+
+		$cnt = 0;
+
+		foreach ($tag_ids as $tag_id) {
+			$cnt++;
+			if (count($tag_ids) === $cnt)
+				$sql .= $tag_id."') LIMIT 30";
+			else 
+				$sql .= $tag_id."','";
+		}
 		
 		// 쿼리 실행
 		$result = mysql_query($sql, $connect);
@@ -201,7 +224,7 @@ class TagDB extends _MapicsDB{
 			// $resultArray에 담기
 			array_push($resultArray, $row['map_id']);  
 		}
-//var_dump($resultArray);
+
 		return $resultArray;
 	}
 }
