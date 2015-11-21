@@ -51,13 +51,24 @@
 		return $map_result;
 	}
 
+	// 맵 캡쳐 피드로($num 개수만큼) 불러오기
+	function getMapFeedCapture($user_id, $num = 30) {
+		// db 연결
+		$db = new ImgDB;
+
+		// db에서 map_url 가져옴 (map_url, full_map, description, liker)
+		$map_result = $db->getFeedById($user_id, $num);
+		
+
+		return $map_result;
+	}
+
 	// 맵 캡처 아이디로 불러오기
-	function getMapCaptureById($user_id, $num = 5) {
+	function getMapCaptureById($user_id) {
 		// db 연결
 		$db = new ImgDB;
 		
-		// db에서 map_url 가져옴 (map_url, full_map, description, liker)
-		$map_result = $db->getMapById($user_id, $num);
+		$map_result .= $db->getMapById($user_id);
 
 		return $map_result;
 	}
@@ -305,6 +316,47 @@ class ImgDB extends _MapicsDB{
 		// 쿼리문 생성
 		$sql = "SELECT map_id, user_id, full_map, description, liker FROM map_storage WHERE user_id = ".$user_id." LIMIT ".$num ;
 		// 쿼리 실행
+		$result = mysql_query($sql, $connect);
+		
+		// 쿼리 실행 결과를 배열 형태로 담음
+		$resultArray = array ();  
+		while ( $row = mysql_fetch_assoc($result)) {  
+			$arrayMiddle = array (  
+				"map_id" => (int) $row ['map_id'] ,
+				"user_id" => (int) $row ['user_id'],
+				"map_capture" => $row ['full_map'],
+				"description" => $row ['description'],
+				"liker" => $row ['liker']
+			);
+			// $resultArray에 담기
+			array_push($resultArray, $arrayMiddle);  
+		}
+
+		return $resultArray;
+	}
+
+	// 유저 아이디에 해당하는 피드 전부 가져오기
+	function getFeedById($user_id, $num) {
+		// 데이터베이스 접속
+		$connect = mysql_connect( $this->db_host, $this->db_id, $this->db_password) or  
+			die ("SQL server에 연결할 수 없습니다.");
+		mysql_query("SET NAMES UTF8");
+		mysql_select_db($this->db_dbname, $connect);
+
+		// 세션 시작
+		session_start();
+
+		// 쿼리문 생성
+		$sql = "SELECT map_id, user_id, full_map, description, liker 
+			FROM map_storage 
+			WHERE user_id IN (
+				SELECT following
+				FROM follow
+				WHERE follower = '".$user_id."'
+			)
+			LIMIT ".$num ;
+		// 쿼리 실행
+
 		$result = mysql_query($sql, $connect);
 		
 		// 쿼리 실행 결과를 배열 형태로 담음

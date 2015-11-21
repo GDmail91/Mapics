@@ -5,8 +5,7 @@
 	include '../Class/Img_ctl.php';
 	session_start();
 
-	if ($_SESSION['is_login']) {
-
+	//if ($_SESSION['is_login']) {
 		$mapLoad = new mapLoad;
 		$userLoad = new Auth;
 		$hash_tag = new Hash_tag;
@@ -14,7 +13,9 @@
 
 		$mapArray = array();
 
-		// POST 로 온 map_id 에 해당하는 태그 출력
+		// POST로 온 tag_name 갯수 확인
+		$tag_name = explode(' ', trim($_POST['tag_name']));
+
 		$result_map_id = $hash_tag->get_map($_POST['tag_name']);
 
 		// 각 맵ID 별로 가져옴
@@ -45,9 +46,9 @@
 				));
 			$tag_name = "";
 		}
-	} else {
-		$mapArray = array('result'=>'false', 'msg'=>'로그인이 필요합니다');
-	}
+	//} else {
+	//	$mapArray = array('result'=>'false', 'msg'=>'로그인이 필요합니다');
+	//}
 	
 	echo urldecode( json_encode ( $mapArray ));
 

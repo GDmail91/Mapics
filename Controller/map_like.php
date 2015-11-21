@@ -13,7 +13,8 @@
 			if (is_int($liker)) {
 				$result = array(
 					'result'=>'true',
-					'liker'=>$liker
+					'liker'=>$liker,
+					'is_like'=>'true'
 					);
 			} else {
 				$result = array( 'result'=>'false', 'msg'=>'좋아요 실패' );
@@ -25,7 +26,8 @@
 			if (is_int($liker)) {
 				$result = array(
 					'result'=>'true',
-					'liker'=>$liker
+					'liker'=>$liker,
+					'is_like'=>'false'
 					);
 			} else {
 				$result = array( 'result'=>'false', 'msg'=>'좋아요 취소 실패' );	

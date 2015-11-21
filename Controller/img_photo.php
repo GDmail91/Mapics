@@ -9,7 +9,7 @@
 
 		$result = $mapLoad->get_image($_POST['img_id'], $_SESSION['user_id']); // POST값으로 바꿀것		
 		if ($Img_ctl->is_img_liker($_POST['img_id'], $_SESSION['user_id']))
-			$is_like='ture';
+			$is_like='true';
 		else 
 			$is_like='false';
 		$result += array('is_like' => $is_like);

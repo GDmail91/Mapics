@@ -8,14 +8,14 @@
 	$auth = new Auth;
 	$hash_tag = new Hash_tag;
 	$Img_ctl = new Img_ctl;
-
-	session_start();
+	
 	// num 값이 있는 경우 num값 만큼만 가져옴 (기본값 5)
 	if (isset($_POST['num'])) {
-		$maps = $mapLoad->getMapFeedCapture($_SESSION['user_id'], $_POST['num']);
+		$maps = $mapLoad->getMapFeedCapture($_POST['user_id'], $_POST['num']);
 	} else {
-		$maps = $mapLoad->getMapFeedCapture($_SESSION['user_id']);
+		$maps = $mapLoad->getMapFeedCapture($_POST['user_id']);
 	}
+
 
 	$map_list[] = null ; // 결과 담을 변수
 	foreach ($maps as $map) {
@@ -37,8 +37,7 @@
 			'tag_name'=>$tag_name)); // tag 이름 가져옴
 		$tag_name = null;
 	}
-
-	$mapArray[] = null;
+$mapArray[] = null;
 	for ($i=0; $i < count($maps); $i++) { 
 		$mapArray['mapInfo'.$i] = $map_list[$i+1]; // 각 맵정보를 배열에 담음
 	}
